@@ -1,31 +1,29 @@
-import React, { Suspense, useEffect, useMemo } from 'react'
+import React, { Suspense, useEffect, useMemo, useState } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import { systemRouters } from '../router/utils'
-import MainRoutes from './MainRoutes';
 
-
-function renderRouterList() {
-  return systemRouters.map(route => {
-    const { path, component: Component } = route;
-    // return <Route exact path={path} component={component} key={path}></Route>
-    return <Route exact path={path} render={() => <Component></Component>} key={path}></Route>
-  })
-}
 
 function UserLayout() {
   console.log('lay', systemRouters[0].path)
-  useEffect(() => {
-    console.log('er')
-  }, [])
-
-  const routeList = useMemo(() => renderRouterList(), [])
-
+  const [count, setCount] = useState(0)
 
   return (
     <>
+      <button onClick={() => setCount(count + 1)}>{count}</button>
       <Suspense fallback={<p>loading</p>}>
         <Switch>
-          <MainRoutes></MainRoutes>
+          {
+            systemRouters.map(route => {
+              const { path, component } = route
+              console.log(component)
+              return <Route
+                key={path}
+                path={path}
+                component={component}
+                exact
+              ></Route>
+            })
+          }
         </Switch>
       </Suspense>
     </>

@@ -1083,7 +1083,7 @@
     core-js-pure "^3.20.2"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.1", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.18.9", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.1", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.18.0", "@babel/runtime@^7.18.3", "@babel/runtime@^7.18.9", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
   version "7.18.9"
   resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.18.9.tgz#b4fcfce55db3d2e5e080d2490f608a3b9f407f4a"
   integrity sha512-lkqXDcvlFT5rvEjiu6+QYO+1GXrEHRo2LOtS7E4GtX5ESIZOgepqsZBVIj6Pv+a6zqsya9VCgiK1KAK4BvJDAw==
@@ -1247,6 +1247,18 @@
     js-yaml "^4.1.0"
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
+
+"@floating-ui/core@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.npmmirror.com/@floating-ui/core/-/core-1.0.1.tgz#00e64d74e911602c8533957af0cce5af6b2e93c8"
+  integrity sha512-bO37brCPfteXQfFY0DyNDGB3+IMe4j150KFQcgJ5aBP295p9nBGeHEs/p0czrRbtlHq4Px/yoPXO/+dOCcF4uA==
+
+"@floating-ui/dom@^1.0.0":
+  version "1.0.1"
+  resolved "https://registry.npmmirror.com/@floating-ui/dom/-/dom-1.0.1.tgz#3321d4e799d6ac2503e729131d07ad0e714aabeb"
+  integrity sha512-wBDiLUKWU8QNPNOTAFHiIAkBv1KlHauG2AhqjSeh2H+wR8PX+AArXfz8NkRexH5PgMJMmSOS70YS89AbWYh5dA==
+  dependencies:
+    "@floating-ui/core" "^1.0.1"
 
 "@graphql-codegen/add@^3.2.1":
   version "3.2.1"
@@ -2025,6 +2037,52 @@
     schema-utils "^3.0.0"
     source-map "^0.7.3"
 
+"@react-spring/animated@~9.5.2":
+  version "9.5.2"
+  resolved "https://registry.npmmirror.com/@react-spring/animated/-/animated-9.5.2.tgz#42785b4f369d9715e9ee32c04b78483e7bb85489"
+  integrity sha512-oRlX+MmYLbK8IuUZR7SQUnRjXxJ4PMIZeBkBd1SUWVgVJAHMTfJzPltzm+I6p59qX+qLlklYHfnWaonQKDqLuQ==
+  dependencies:
+    "@react-spring/shared" "~9.5.2"
+    "@react-spring/types" "~9.5.2"
+
+"@react-spring/core@~9.5.2":
+  version "9.5.2"
+  resolved "https://registry.npmmirror.com/@react-spring/core/-/core-9.5.2.tgz#c8450783ce87a82d3f9ab21e2650e42922398ff7"
+  integrity sha512-UMRtFH6EfebMp/NMDGCUY5+hZFXsg9iT9hzt/iPzJSz2WMXKBjLoFZHJXcmiVOrIhzHmg1O0pFECn1Wp6pZ5Gw==
+  dependencies:
+    "@react-spring/animated" "~9.5.2"
+    "@react-spring/rafz" "~9.5.2"
+    "@react-spring/shared" "~9.5.2"
+    "@react-spring/types" "~9.5.2"
+
+"@react-spring/rafz@~9.5.2":
+  version "9.5.2"
+  resolved "https://registry.npmmirror.com/@react-spring/rafz/-/rafz-9.5.2.tgz#1264d5df09717cf46d55055da2c55ff84f59073f"
+  integrity sha512-xHSRXKKBI/wDUkZGrspkOm4VlgN6lZi8Tw9Jzibp9QKf3neoof+U2mDNgklvnLaasymtUwAq9o4ZfFvQIVNgPQ==
+
+"@react-spring/shared@~9.5.2":
+  version "9.5.2"
+  resolved "https://registry.npmmirror.com/@react-spring/shared/-/shared-9.5.2.tgz#e0a252e06daa3927964460fef05d8092e7d78ffc"
+  integrity sha512-/OSf2sjwY4BUnjZL6xMC+H3WxOOhMUCk+yZwgdj40XuyUpk6E6tYyiPeD9Yq5GLsZHodkvE1syVMRVReL4ndAg==
+  dependencies:
+    "@react-spring/rafz" "~9.5.2"
+    "@react-spring/types" "~9.5.2"
+
+"@react-spring/types@~9.5.2":
+  version "9.5.2"
+  resolved "https://registry.npmmirror.com/@react-spring/types/-/types-9.5.2.tgz#cce1b03afbafb23edfb9cd8c517cc7462abffb65"
+  integrity sha512-n/wBRSHPqTmEd4BFWY6TeR1o/UY+3ujoqMxLjqy90CcY/ozJzDRuREL3c+pxMeTF2+B7dX33dTPCtFMX51nbxg==
+
+"@react-spring/web@^9.4.5":
+  version "9.5.2"
+  resolved "https://registry.npmmirror.com/@react-spring/web/-/web-9.5.2.tgz#762ee6b3c8fea40281e1298f5cf1c0515ad6a794"
+  integrity sha512-cusTjbOGTgtbsnpBDjb6Ia+B0lQLE0Fk5rGDog6Sww7hWnLIQ521PMiOBnAWtkntB9eXDUfj7L91nwJviEC0lw==
+  dependencies:
+    "@react-spring/animated" "~9.5.2"
+    "@react-spring/core" "~9.5.2"
+    "@react-spring/shared" "~9.5.2"
+    "@react-spring/types" "~9.5.2"
+
 "@rollup/plugin-babel@^5.2.0":
   version "5.3.1"
   resolved "https://registry.npmjs.org/@rollup/plugin-babel/-/plugin-babel-5.3.1.tgz#04bc0608f4aa4b2e4b1aebf284344d0f68fda283"
@@ -2464,6 +2522,11 @@
     jest-matcher-utils "^27.0.0"
     pretty-format "^27.0.0"
 
+"@types/js-cookie@^2.x.x":
+  version "2.2.7"
+  resolved "https://registry.npmmirror.com/@types/js-cookie/-/js-cookie-2.2.7.tgz#226a9e31680835a6188e887f3988e60c04d3f6a3"
+  integrity sha512-aLkWa0C0vO5b4Sr798E26QgOkss68Un0bLjs7u9qxzPT5CG+8DuNTffWES58YzJs3hrVAOs1wonycqEBqNJubA==
+
 "@types/js-yaml@^4.0.0":
   version "4.0.5"
   resolved "https://registry.npmjs.org/@types/js-yaml/-/js-yaml-4.0.5.tgz#738dd390a6ecc5442f35e7f03fa1431353f7e138"
@@ -2743,6 +2806,18 @@
     "@typescript-eslint/types" "5.33.0"
     eslint-visitor-keys "^3.3.0"
 
+"@use-gesture/core@10.2.17":
+  version "10.2.17"
+  resolved "https://registry.npmmirror.com/@use-gesture/core/-/core-10.2.17.tgz#dc78913cd5d105217c3f1d1c16a32ad6426a00ba"
+  integrity sha512-62hCybe4x6oGZ1/JA9gSYIdghV1FqxCdvYWt9SqCEAAikwT1OmVl2Q/Uu8CP636L57D+DfXtw6PWM+fdhr4oJQ==
+
+"@use-gesture/react@10.2.17":
+  version "10.2.17"
+  resolved "https://registry.npmmirror.com/@use-gesture/react/-/react-10.2.17.tgz#00bc413da42a358dd3f9173c0631b54522e76614"
+  integrity sha512-Vfrp1KgdYn/kOEUAYNXtGBCl2dr38s3G6rru1TOPs+cVUjfNyNxvJK56grUyJ336N3rQLK8F9G7+FfrHuc3g/Q==
+  dependencies:
+    "@use-gesture/core" "10.2.17"
+
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
   resolved "https://registry.npmjs.org/@webassemblyjs/ast/-/ast-1.11.1.tgz#2bfd767eae1a6996f432ff7e8d7fc75679c0b6a7"
@@ -3010,6 +3085,25 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
+ahooks-v3-count@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmmirror.com/ahooks-v3-count/-/ahooks-v3-count-1.0.0.tgz#ddeb392e009ad6e748905b3cbf63a9fd8262ca80"
+  integrity sha512-V7uUvAwnimu6eh/PED4mCDjE7tokeZQLKlxg9lCTMPhN+NjsSbtdacByVlR1oluXQzD3MOw55wylDmQo4+S9ZQ==
+
+ahooks@^3.7.0:
+  version "3.7.0"
+  resolved "https://registry.npmmirror.com/ahooks/-/ahooks-3.7.0.tgz#e143ad3f1f1a05387c30031bf5634c9e9fa05d87"
+  integrity sha512-IOZ6IpVeAd7aWtV2O+dBmCQc0aHt+WPG3B5tPHnVVcPnEq9FDJxx8IIA5hLxN4lRa1m1ZMx6pOE2rrYW7bjU6A==
+  dependencies:
+    "@types/js-cookie" "^2.x.x"
+    ahooks-v3-count "^1.0.0"
+    dayjs "^1.9.1"
+    intersection-observer "^0.12.0"
+    js-cookie "^2.x.x"
+    lodash "^4.17.21"
+    resize-observer-polyfill "^1.5.1"
+    screenfull "^5.0.0"
+
 ajv-formats@^2.1.1:
   version "2.1.1"
   resolved "https://registry.npmjs.org/ajv-formats/-/ajv-formats-2.1.1.tgz#6e669400659eb74973bbf2e33327180a0996b520"
@@ -3089,6 +3183,37 @@ ansi-styles@^5.0.0:
   version "5.2.0"
   resolved "https://registry.npmjs.org/ansi-styles/-/ansi-styles-5.2.0.tgz#07449690ad45777d1924ac2abb2fc8895dba836b"
   integrity sha512-Cxwpt2SfTzTtXcfOlzGEee8O+c+MmUgGrNiBcXnuWxuFJHe6a5Hz7qwhwe5OgaSYI0IJvkLqWX1ASG+cJOkEiA==
+
+antd-mobile-icons@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.npmmirror.com/antd-mobile-icons/-/antd-mobile-icons-0.3.0.tgz#9b29e4588a62370909061f10ff0579aabb0b32a9"
+  integrity sha512-rqINQpJWZWrva9moCd1Ye695MZYWmqLPE+bY8d2xLRy7iSQwPsinCdZYjpUPp2zL/LnKYSyXxP2ut2A+DC+whQ==
+
+antd-mobile-v5-count@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmmirror.com/antd-mobile-v5-count/-/antd-mobile-v5-count-1.0.1.tgz#85f20c46d1635c24e856bcf5ad55e8c98e44a523"
+  integrity sha512-YGsiEDCPUDz3SzfXi6gLZn/HpeSMW+jgPc4qiYUr1fSopg3hkUie2TnooJdExgfiETHefH3Ggs58He0OVfegLA==
+
+antd-mobile@^5.21.0:
+  version "5.21.0"
+  resolved "https://registry.npmmirror.com/antd-mobile/-/antd-mobile-5.21.0.tgz#390648d4acd698a398c94f6b43d3d111a11f64f5"
+  integrity sha512-truJ7GQbIfGNFhO+9HflWEImRbk0JCdZCCZgKyfg3y3UEUtkM3QMTmhaK6kJTb/Yo/1Snh2pj0zj0e7y9OTDrQ==
+  dependencies:
+    "@floating-ui/dom" "^1.0.0"
+    "@react-spring/web" "^9.4.5"
+    "@use-gesture/react" "10.2.17"
+    ahooks "^3.7.0"
+    antd-mobile-icons "^0.3.0"
+    antd-mobile-v5-count "^1.0.1"
+    big.js "^6.2.1"
+    classnames "^2.3.1"
+    dayjs "^1.11.4"
+    lodash "^4.17.21"
+    rc-field-form "~1.27.0"
+    react-is "^17.0.2"
+    staged-components "^1.1.3"
+    tslib "^2.4.0"
+    use-sync-external-store "^1.1.0"
 
 anymatch@^3.0.3, anymatch@~3.1.2:
   version "3.1.2"
@@ -3213,6 +3338,11 @@ astral-regex@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/astral-regex/-/astral-regex-2.0.0.tgz#483143c567aeed4785759c0865786dc77d7d2e31"
   integrity sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==
+
+async-validator@^4.1.0:
+  version "4.2.5"
+  resolved "https://registry.npmmirror.com/async-validator/-/async-validator-4.2.5.tgz#c96ea3332a521699d0afaaceed510a54656c6339"
+  integrity sha512-7HhHjtERjqlNbZtqNqy2rckN/SpOOlmDliet+lP7k+eKZEjPk3DgyeU9lIXLdeLz0uBbbVp+9Qdow9wJWgwwfg==
 
 async@^3.2.3:
   version "3.2.4"
@@ -3466,6 +3596,11 @@ big.js@^5.2.2:
   version "5.2.2"
   resolved "https://registry.npmjs.org/big.js/-/big.js-5.2.2.tgz#65f0af382f578bcdc742bd9c281e9cb2d7768328"
   integrity sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==
+
+big.js@^6.2.1:
+  version "6.2.1"
+  resolved "https://registry.npmmirror.com/big.js/-/big.js-6.2.1.tgz#7205ce763efb17c2e41f26f121c420c6a7c2744f"
+  integrity sha512-bCtHMwL9LeDIozFn+oNhhFoq+yQ3BNdnsLSASUxLciOb1vgvpHsIO1dsENiGMgbb4SkP5TrzWzRiLddn8ahVOQ==
 
 binary-extensions@^2.0.0:
   version "2.2.0"
@@ -3776,6 +3911,11 @@ cjs-module-lexer@^1.0.0:
   version "1.2.2"
   resolved "https://registry.npmjs.org/cjs-module-lexer/-/cjs-module-lexer-1.2.2.tgz#9f84ba3244a512f3a54e5277e8eef4c489864e40"
   integrity sha512-cOU9usZw8/dXIXKtwa8pM0OTJQuJkxMN6w30csNRUerHfeQ5R6U3kkU/FtJeIf3M202OHfY2U8ccInBG7/xogA==
+
+classnames@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.npmmirror.com/classnames/-/classnames-2.3.1.tgz#dfcfa3891e306ec1dad105d0e88f4417b8535e8e"
+  integrity sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==
 
 clean-css@^5.2.2:
   version "5.3.1"
@@ -4296,6 +4436,11 @@ dataloader@2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/dataloader/-/dataloader-2.1.0.tgz#c69c538235e85e7ac6c6c444bae8ecabf5de9df7"
   integrity sha512-qTcEYLen3r7ojZNgVUaRggOI+KM7jrKxXeSHhogh/TWxYMeONEMqY+hmkobiYQozsGIyg9OYVzO4ZIfoB4I0pQ==
+
+dayjs@^1.11.4, dayjs@^1.9.1:
+  version "1.11.5"
+  resolved "https://registry.npmmirror.com/dayjs/-/dayjs-1.11.5.tgz#00e8cc627f231f9499c19b38af49f56dc0ac5e93"
+  integrity sha512-CAdX5Q3YW3Gclyo5Vpqkgpj8fSdLQcRuzfX6mC6Phy0nfJ0eGYOeS7m4mt2plDWLAtA4TqTakvbboHvUxfe4iA==
 
 debounce@^1.2.0:
   version "1.2.1"
@@ -5963,6 +6108,11 @@ internal-slot@^1.0.3:
     has "^1.0.3"
     side-channel "^1.0.4"
 
+intersection-observer@^0.12.0:
+  version "0.12.2"
+  resolved "https://registry.npmmirror.com/intersection-observer/-/intersection-observer-0.12.2.tgz#4a45349cc0cd91916682b1f44c28d7ec737dc375"
+  integrity sha512-7m1vEcPCxXYI8HqnL8CKI6siDyD+eIWSwgB3DZA+ZTogxk9I4CDnj4wilt9x/+/QbHI4YG5YZNmC6458/e9Ktg==
+
 invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.npmjs.org/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
@@ -6790,6 +6940,11 @@ jest@^27.4.3:
     "@jest/core" "^27.5.1"
     import-local "^3.0.2"
     jest-cli "^27.5.1"
+
+js-cookie@^2.x.x:
+  version "2.2.1"
+  resolved "https://registry.npmmirror.com/js-cookie/-/js-cookie-2.2.1.tgz#69e106dc5d5806894562902aa5baec3744e9b2b8"
+  integrity sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
@@ -8598,6 +8753,24 @@ raw-body@2.5.1:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
+rc-field-form@~1.27.0:
+  version "1.27.1"
+  resolved "https://registry.npmmirror.com/rc-field-form/-/rc-field-form-1.27.1.tgz#11d61ccb43679e71fdbbff0d821326202554df84"
+  integrity sha512-RShegnwFu6TH8tl2olCxn+B4Wyh5EiQH8c/7wucbkLNyue05YiH5gomUAg1vbZjp71yFKwegClctsEG5CNBWAA==
+  dependencies:
+    "@babel/runtime" "^7.18.0"
+    async-validator "^4.1.0"
+    rc-util "^5.8.0"
+
+rc-util@^5.8.0:
+  version "5.23.0"
+  resolved "https://registry.npmmirror.com/rc-util/-/rc-util-5.23.0.tgz#a583b1ec3e1832a80eced7a700a494af0b590743"
+  integrity sha512-lgm6diJ/pLgyfoZY59Vz7sW4mSoQCgozqbBye9IJ7/mb5w5h4T7h+i2JpXAx/UBQxscBZe68q0sP7EW+qfkKUg==
+  dependencies:
+    "@babel/runtime" "^7.18.3"
+    react-is "^16.12.0"
+    shallowequal "^1.1.0"
+
 react-app-polyfill@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/react-app-polyfill/-/react-app-polyfill-3.0.0.tgz#95221e0a9bd259e5ca6b177c7bb1cb6768f68fd7"
@@ -8653,12 +8826,12 @@ react-error-overlay@^6.0.11:
   resolved "https://registry.npmjs.org/react-error-overlay/-/react-error-overlay-6.0.11.tgz#92835de5841c5cf08ba00ddd2d677b6d17ff9adb"
   integrity sha512-/6UZ2qgEyH2aqzYZgQPxEnz33NJ2gNsnHA2o5+o4wW9bLM/JYQitNP9xPhsXwC08hMMovfGe/8retsdDsczPRg==
 
-react-is@^16.13.1, react-is@^16.6.0, react-is@^16.7.0:
+react-is@^16.12.0, react-is@^16.13.1, react-is@^16.6.0, react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-is@^17.0.1:
+react-is@^17.0.1, react-is@^17.0.2:
   version "17.0.2"
   resolved "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
@@ -8966,6 +9139,11 @@ requires-port@^1.0.0:
   resolved "https://registry.npmjs.org/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
   integrity sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==
 
+resize-observer-polyfill@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.npmmirror.com/resize-observer-polyfill/-/resize-observer-polyfill-1.5.1.tgz#0e9020dd3d21024458d4ebd27e23e40269810464"
+  integrity sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==
+
 resolve-cwd@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/resolve-cwd/-/resolve-cwd-3.0.0.tgz#0f0075f1bb2544766cf73ba6a6e2adfebcb13f2d"
@@ -9172,6 +9350,11 @@ schema-utils@^4.0.0:
     ajv-formats "^2.1.1"
     ajv-keywords "^5.0.0"
 
+screenfull@^5.0.0:
+  version "5.2.0"
+  resolved "https://registry.npmmirror.com/screenfull/-/screenfull-5.2.0.tgz#6533d524d30621fc1283b9692146f3f13a93d1ba"
+  integrity sha512-9BakfsO2aUQN2K9Fdbj87RJIEZ82Q9IGim7FqM5OsebfoFC6ZHXgDq/KvniuLTPdeM8wY2o6Dj3WQ7KeQCj3cA==
+
 scuid@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/scuid/-/scuid-1.1.0.tgz#d3f9f920956e737a60f72d0e4ad280bf324d5dab"
@@ -9295,6 +9478,11 @@ setprototypeof@1.2.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
+
+shallowequal@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/shallowequal/-/shallowequal-1.1.0.tgz#188d521de95b9087404fd4dcb68b13df0ae4e7f8"
+  integrity sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==
 
 shebang-command@^2.0.0:
   version "2.0.0"
@@ -9482,6 +9670,11 @@ stackframe@^1.3.4:
   version "1.3.4"
   resolved "https://registry.npmjs.org/stackframe/-/stackframe-1.3.4.tgz#b881a004c8c149a5e8efef37d51b16e412943310"
   integrity sha512-oeVtt7eWQS+Na6F//S4kJ2K2VbRlS9D43mAlMyVpVWovy9o+jfgH8O9agzANzaiLjclA0oYzUXEM4PurhSUChw==
+
+staged-components@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.npmmirror.com/staged-components/-/staged-components-1.1.3.tgz#bb5a396df2d9b48fbc31841a59f53437ed8b8ac6"
+  integrity sha512-9EIswzDqjwlEu+ymkV09TTlJfzSbKgEnNteUnZSTxkpMgr5Wx2CzzA9WcMFWBNCldqVPsHVnRGGrApduq2Se5A==
 
 statuses@2.0.1:
   version "2.0.1"
@@ -10153,7 +10346,7 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-use-sync-external-store@^1.0.0:
+use-sync-external-store@^1.0.0, use-sync-external-store@^1.1.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/use-sync-external-store/-/use-sync-external-store-1.2.0.tgz#7dbefd6ef3fe4e767a0cf5d7287aacfb5846928a"
   integrity sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==
