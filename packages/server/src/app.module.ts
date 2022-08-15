@@ -7,6 +7,8 @@ import { UserModule } from './domain/user/user.module';
 import { User } from './domain/user/entity/user.entity';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver } from '@nestjs/apollo';
+import { UserService } from './domain/user/user.service';
+import { AuthModule } from './domain/auth/auth.module';
 
 @Module({
   imports: [
@@ -31,8 +33,10 @@ import { ApolloDriver } from '@nestjs/apollo';
       autoSchemaFile: 'schema.graphql',
     }),
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
+  // exports: [UserService],
 })
 export class AppModule {}

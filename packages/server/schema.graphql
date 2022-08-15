@@ -5,6 +5,11 @@
 type User {
   id: Float!
   name: String
+  password: String!
+}
+
+type Token {
+  access_token: String
 }
 
 type Query {
@@ -13,8 +18,10 @@ type Query {
 
 type Mutation {
   createUser(user: CreateUserInput!): User!
+  login(name: String!, password: String!): Token!
 }
 
 input CreateUserInput {
   name: String!
+  password: String!
 }

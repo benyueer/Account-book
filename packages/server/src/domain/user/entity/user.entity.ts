@@ -14,10 +14,17 @@ export class User {
     unique: true
   })
   name: string;
+
+  @Column()
+  @Field({nullable: false})
+  password: string;
 }
 
 @InputType()
 export class CreateUserInput {
   @Field()
   name: string;
+
+  @Field()
+  password: string;
 };

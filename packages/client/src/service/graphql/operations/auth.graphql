@@ -1,0 +1,10 @@
+mutation  login($name: String!, $password: String!) {
+  login(name: $name, password: $password) {
+    access_token
+  }
+}
+query queryUserByName($name: String!) {
+  queryUserByName(name: $name) {
+    name
+  }
+}
