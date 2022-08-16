@@ -35,4 +35,38 @@ export const routes: IRoute[] = [
       }
     ]
   },
+  {
+    path: '/main',
+    component: React.lazy(() => import('../layout/index')),
+    redirect: '/record',
+    meta: {},
+    children: [
+      // {
+      //   path: '/main',
+      //   redirect: '/main/record',
+      //   meta: {},
+      //   component: () => ({})
+      // },
+      {
+        path: '/main/record',
+        component: React.lazy(() => import('../views/record/Record')),
+        meta: {}
+      },
+      {
+        path: '/main/details',
+        component: React.lazy(() => import('../views/details/index')),
+        meta: {}
+      },
+      {
+        path: '/main/statistics',
+        component: React.lazy(() => import('../views/statistics/index')),
+        meta: {}
+      },
+      {
+        path: '/main/user',
+        component: React.lazy(() => import('../views/user/index')),
+        meta: {}
+      },
+    ]
+  }
 ]

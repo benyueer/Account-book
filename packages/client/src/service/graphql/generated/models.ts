@@ -47,6 +47,7 @@ export type QueryQueryUserByNameArgs = {
 export type Token = {
   __typename?: 'Token';
   access_token?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['Float']>;
 };
 
 export type User = {

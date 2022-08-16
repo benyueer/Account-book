@@ -31,6 +31,7 @@ import { AuthModule } from './domain/auth/auth.module';
     GraphQLModule.forRoot({
       driver: ApolloDriver,
       autoSchemaFile: 'schema.graphql',
+      cors: true,
     }),
     UserModule,
     AuthModule,

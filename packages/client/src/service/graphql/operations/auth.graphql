@@ -1,6 +1,7 @@
 mutation  login($name: String!, $password: String!) {
   login(name: $name, password: $password) {
     access_token
+    id
   }
 }
 query queryUserByName($name: String!) {

@@ -1,27 +1,33 @@
 import React from 'react'
+import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { IRoute } from '../router/config';
+import { baseRouters } from '../router/utils';
 import { useLoginMutation } from '../service/graphql/operations/auth.generated';
 import { getToken } from '../utils/utils'
 
-export default function Auth(props: { children: any }) {
-  const [fetch, result] = useLoginMutation();
+interface AuthProps extends RouteComponentProps{
+  route: IRoute;
+  children: Function;
+}
 
-  const login = async () => {
-    const res = await fetch({ variables: { name: 'ads', password: 'qwe' } });
-    console.log(res)
-    if (res.data?.login.access_token) {
-      console.log(result.data?.login.access_token)
-      localStorage.setItem('token', res.data?.login.access_token as string);
-    }
-  }
+export default function Auth(props: AuthProps) {
+  console.log(props)
 
-  if (getToken()) {
-    return props.children
-  } else {
+
+  if (!getToken()) {
     return (
-      <>
-        <button onClick={() => login()}>fetch</button>
-
-      </>
+      <Redirect to="/system/login"></Redirect>
     )
   }
+
+  if (props.route.redirect) {
+    return (
+      <Redirect to={props.route.redirect} push ></Redirect>
+    )
+  }
+
+  return (
+    <>{props.children(props)}</>
+  )
+
 }

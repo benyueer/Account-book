@@ -9,7 +9,7 @@ export type LoginMutationVariables = Types.Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'Token', access_token?: string | null } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'Token', access_token?: string | null, id?: number | null } };
 
 export type QueryUserByNameQueryVariables = Types.Exact<{
   name: Types.Scalars['String'];
@@ -23,6 +23,7 @@ export const LoginDocument = gql`
     mutation login($name: String!, $password: String!) {
   login(name: $name, password: $password) {
     access_token
+    id
   }
 }
     `;

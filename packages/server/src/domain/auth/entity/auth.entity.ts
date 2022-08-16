@@ -4,4 +4,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 export class Token {
   @Field({ nullable: true })
   access_token: string;
+
+  @Field({ nullable: true })
+  id: number;
 }
