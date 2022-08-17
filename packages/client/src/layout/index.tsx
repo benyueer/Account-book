@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Redirect, Route, RouteComponentProps, Router, Switch } from 'react-router-dom'
 import Menu from '../components/menu'
 import { baseRouters } from '../router/utils'
@@ -8,28 +8,32 @@ import MenuLayout from './MenuLayout'
 export default function Layout(props: RouteComponentProps) {
   return (
     <>
-      <Route>
-        <Switch>
-          {
-            baseRouters.map(route => {
-              const { path, component: Component } = route
-              return <Route
-                exact
-                path={path}
-                key={path}
-                render={(rprops: RouteComponentProps) =>
-                  <Auth {...rprops} route={route}>
-                    {
-                      (props: JSX.IntrinsicAttributes) => <MenuLayout {...rprops}><Component {...props}></Component></MenuLayout>
+      <MenuLayout {...props}>
+        <Suspense fallback={<p>lo</p>}>
+          <Route>
+            <Switch>
+              {
+                baseRouters.map(route => {
+                  const { path, component: Component } = route
+                  return <Route
+                    exact
+                    path={path}
+                    key={path}
+                    render={(rprops: RouteComponentProps) =>
+                      <Auth {...rprops} route={route}>
+                        {
+                          (props: JSX.IntrinsicAttributes) => <Component {...props}></Component>
+                        }
+                      </Auth>
                     }
-                  </Auth>
-                }
-              ></Route>
-            })
-          }
-          <Redirect to="/main/record"></Redirect>
-        </Switch>
-      </Route>
+                  ></Route>
+                })
+              }
+              <Redirect to="/main/record"></Redirect>
+            </Switch>
+          </Route>
+        </Suspense>
+      </MenuLayout>
     </>
   )
 }

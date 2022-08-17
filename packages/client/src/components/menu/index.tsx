@@ -1,21 +1,56 @@
 import React from 'react'
-import { RouteComponentProps, useRouteMatch } from 'react-router-dom'
+import { RouteComponentProps, useLocation, useRouteMatch } from 'react-router-dom'
+import { Badge, TabBar } from 'antd-mobile'
 import styles from './styles.module.less'
+import {
+  EditSOutline,
+  HistogramOutline,
+  ContentOutline,
+  UserOutline,
+} from 'antd-mobile-icons'
 
 export default function Menu(props: RouteComponentProps) {
-  const { url } = useRouteMatch()
+  const { pathname } = useLocation()
 
-  const goto = (path: string) => {
-    if (url === path) return
-    props.history.push(path)
+  const tabs = [
+    {
+      key: '/main/record',
+      title: '记录',
+      icon: <EditSOutline />,
+      badge: Badge.dot,
+    },
+    {
+      key: '/main/details',
+      title: '详情',
+      icon: <ContentOutline />,
+      badge: '5',
+    },
+    {
+      key: '/main/statistics',
+      title: '统计',
+      icon: <HistogramOutline />,
+      badge: '99+',
+    },
+    {
+      key: '/main/user',
+      title: '我的',
+      icon: <UserOutline />,
+    },
+  ]
+
+  const setRouteActive = (value: string) => {
+    props.history.push(value)
   }
 
   return (
     <div className={styles.main}>
-      <div className={styles.meunItem} onClick={() => goto('/main/record')}>记录</div>
-      <div className={styles.meunItem} onClick={() => goto('/main/details')}>详情</div>
-      <div className={styles.meunItem} onClick={() => goto('/main/statistics')}>统计</div>
-      <div className={styles.meunItem} onClick={() => goto('/main/user')}>我的</div>
+      <TabBar activeKey={pathname} onChange={(val: string) => setRouteActive(val)} >
+        {
+          tabs.map(tab => (
+            <TabBar.Item key={tab.key} icon={tab.icon} title={tab.title}></TabBar.Item>
+          ))
+        }
+      </TabBar>
     </div>
   )
 }
