@@ -8,8 +8,14 @@ import {
   ContentOutline,
   UserOutline,
 } from 'antd-mobile-icons'
+import { connect } from 'react-redux'
+import { IStoreState } from '../../store'
 
-export default function Menu(props: RouteComponentProps) {
+interface MenuProps extends RouteComponentProps {
+  showMainTabMenu: boolean
+}
+
+function Menu(props: MenuProps) {
   const { pathname } = useLocation()
 
   const tabs = [
@@ -43,7 +49,7 @@ export default function Menu(props: RouteComponentProps) {
   }
 
   return (
-    <div className={styles.main}>
+    <div className={`${styles.main} ${props.showMainTabMenu ? '' : styles.close}`}>
       <TabBar activeKey={pathname} onChange={(val: string) => setRouteActive(val)} >
         {
           tabs.map(tab => (
@@ -54,3 +60,7 @@ export default function Menu(props: RouteComponentProps) {
     </div>
   )
 }
+
+export default connect(
+  ({ system }: IStoreState) => ({ showMainTabMenu: system.showMainTabMenu })
+)(Menu)

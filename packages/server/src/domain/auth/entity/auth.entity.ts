@@ -7,4 +7,13 @@ export class Token {
 
   @Field({ nullable: true })
   id: number;
+
+  @Field({ nullable: true })
+  familyId: number;
+
+  @Field({ nullable: true })
+  name: string;
+
+  @Field({ nullable: true })
+  avatar: string
 }

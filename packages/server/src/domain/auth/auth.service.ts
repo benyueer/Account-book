@@ -5,11 +5,13 @@ import { JwtService } from '@nestjs/jwt';
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  login({ name, password, id }: any) {
+  login({ name, password, id, familyId }: any) {
     const payload = { username: name, password, id };
     return {
       access_token: this.jwtService.sign(payload),
       id,
+      familyId,
+      name
     };
   }
 }

@@ -108,7 +108,8 @@
     "@graphql-codegen/typescript-operations": "^2.5.3",
     "@graphql-codegen/typescript-react-apollo": "^3.3.3",
     "@graphql-codegen/typescript-react-query": "^4.0.1",
-    "@types/react-router-dom": "^5.3.3"
+    "@types/react-router-dom": "^5.3.3",
+    "react-iconfont-cli": "^2.0.2"
   },
   "jest": {
     "roots": [

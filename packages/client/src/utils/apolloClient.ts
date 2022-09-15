@@ -2,11 +2,13 @@ import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from "@apollo/clien
 import { setContext } from '@apollo/client/link/context';
 import { onError } from "@apollo/client/link/error";
 import { Toast } from "antd-mobile";
+import { config } from "../config";
+import { getToken } from "./utils";
 
-const httpLink = new HttpLink({ uri: 'http://192.168.3.146:8000/graphql' })
+const httpLink = new HttpLink({ uri: config.SERVER_URI })
 
 const authLink = setContext((_, {headers}) => {
-  const token = localStorage.getItem('token');
+  const token = getToken();
   return {
     headers: {
       ...headers,

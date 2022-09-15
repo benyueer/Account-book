@@ -1,4 +1,5 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect } from 'react'
+import { connect } from 'react-redux'
 import { Redirect, Route, RouteComponentProps, Router, Switch } from 'react-router-dom'
 import Menu from '../components/menu'
 import { baseRouters } from '../router/utils'
@@ -6,6 +7,7 @@ import Auth from './Auth'
 import MenuLayout from './MenuLayout'
 
 export default function Layout(props: RouteComponentProps) {
+
   return (
     <>
       <MenuLayout {...props}>
@@ -37,3 +39,4 @@ export default function Layout(props: RouteComponentProps) {
     </>
   )
 }
+

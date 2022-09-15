@@ -15,7 +15,7 @@ export class AuthResolver {
     const user = await this.userService.queryByname(name);
     console.log(user);
     if (user && user.password === password) {
-      return this.authService.login({ name, password, id: user.id });
+      return this.authService.login({ name, password, id: user.id, familyId: user.family.id });
     }
     return {
       acsess_token: '',

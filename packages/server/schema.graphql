@@ -2,27 +2,101 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type ConsumptionType {
+  id: Float!
+  baseType: Float!
+  name: String!
+  createBy: Float!
+  pid: Float!
+  familyId: Float!
+}
+
+type ConsumptionTypeItem {
+  id: Float!
+  name: String!
+  pid: Float!
+  baseType: BASE_TYPE!
+  children: [ConsumptionTypeItem!]
+}
+
+enum BASE_TYPE {
+  IN
+  OUT
+}
+
+type Family {
+  id: Float!
+  name: String!
+  picture: String
+}
+
 type User {
   id: Float!
   name: String
   password: String!
+  family: Family
+  accounts: [Float!]
+  avatar: String
+}
+
+type Account {
+  id: Float!
+  type: ACCOUNT_TYPE!
+  userId: Float!
+  name: String!
+  no: String!
+  overage: Float!
+  costCount: Float!
+  incomeCount: Float!
+}
+
+enum ACCOUNT_TYPE {
+  CASH
+  DEBIT_CARD
+  CREDIT_CARD
 }
 
 type Token {
   access_token: String
   id: Float
+  familyId: Float
+  name: String
+  avatar: String
 }
 
 type Query {
   queryUserByName(name: String!): User!
+  queryById(id: Float!): User!
+  getConsumptionType(familyId: Float): [ConsumptionTypeItem!]!
 }
 
 type Mutation {
   createUser(user: CreateUserInput!): User!
   login(name: String!, password: String!): Token!
+  createAccount(data: AccountInput!): Account!
+  updateAccount(data: AccountInput!): Account!
+  createConsumptionType(data: CreateTypeInput!): ConsumptionType!
+  updateConsumptionType(data: CreateTypeInput!): ConsumptionType!
 }
 
 input CreateUserInput {
   name: String!
   password: String!
+}
+
+input AccountInput {
+  id: Float
+  name: String
+  type: ACCOUNT_TYPE
+  userId: Float
+  no: String
+  overage: Float
+}
+
+input CreateTypeInput {
+  id: Float
+  baseType: BASE_TYPE
+  name: String
+  pid: Float
+  familyId: Float
 }

@@ -4,7 +4,8 @@ import styles from './login.module.less'
 import { Button, Form, Input, Toast } from 'antd-mobile'
 import { useLoginMutation } from '../../service/graphql/operations/auth.generated'
 import { setUserInfo, UserState } from '../../store/modules/user';
-import { RouteComponentProps } from 'react-router-dom';
+import { Redirect, RouteComponentProps } from 'react-router-dom';
+import { getToken } from '../../utils/utils';
 
 interface LoginProps extends RouteComponentProps {
   setUserInfo: (userInfo: UserState) => void;
@@ -13,6 +14,7 @@ interface LoginProps extends RouteComponentProps {
 
 function Login(props: LoginProps) {
   console.log('login')
+
   const [form] = Form.useForm()
 
   const onSubmit = async () => {
@@ -26,8 +28,12 @@ function Login(props: LoginProps) {
           icon: 'success',
           content: '登录成功',
         })
-        const {id, access_token} = res.data.login
-        props.setUserInfo({id: id as number, token: access_token})
+        const {id, access_token, familyId, name, avatar} = res.data.login
+        props.setUserInfo({
+          id: id as number, token: access_token, familyId: familyId as number,
+          name: name as string,
+          avatar: avatar as string
+        })
         props.history.push('/')
       } else {
         Toast.show({
@@ -42,6 +48,12 @@ function Login(props: LoginProps) {
   }
 
   const [loginFetch, { data, error, loading }] = useLoginMutation()
+
+  if (getToken()) {
+    return (
+      <Redirect to="/main"></Redirect>
+    )
+  }
 
   return (
     <div className={styles.main}>

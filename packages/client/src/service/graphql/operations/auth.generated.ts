@@ -9,7 +9,7 @@ export type LoginMutationVariables = Types.Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'Token', access_token?: string | null, id?: number | null } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'Token', access_token?: string | null, id?: number | null, familyId?: number | null, name?: string | null, avatar?: string | null } };
 
 export type QueryUserByNameQueryVariables = Types.Exact<{
   name: Types.Scalars['String'];
@@ -18,12 +18,22 @@ export type QueryUserByNameQueryVariables = Types.Exact<{
 
 export type QueryUserByNameQuery = { __typename?: 'Query', queryUserByName: { __typename?: 'User', name?: string | null } };
 
+export type QueryByIdQueryVariables = Types.Exact<{
+  id: Types.Scalars['Float'];
+}>;
+
+
+export type QueryByIdQuery = { __typename?: 'Query', queryById: { __typename?: 'User', id: number, name?: string | null, family?: { __typename?: 'Family', id: number, name: string } | null } };
+
 
 export const LoginDocument = gql`
     mutation login($name: String!, $password: String!) {
   login(name: $name, password: $password) {
     access_token
     id
+    familyId
+    name
+    avatar
   }
 }
     `;
@@ -89,3 +99,43 @@ export function useQueryUserByNameLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type QueryUserByNameQueryHookResult = ReturnType<typeof useQueryUserByNameQuery>;
 export type QueryUserByNameLazyQueryHookResult = ReturnType<typeof useQueryUserByNameLazyQuery>;
 export type QueryUserByNameQueryResult = Apollo.QueryResult<QueryUserByNameQuery, QueryUserByNameQueryVariables>;
+export const QueryByIdDocument = gql`
+    query queryById($id: Float!) {
+  queryById(id: $id) {
+    id
+    name
+    family {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useQueryByIdQuery__
+ *
+ * To run a query within a React component, call `useQueryByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useQueryByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useQueryByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useQueryByIdQuery(baseOptions: Apollo.QueryHookOptions<QueryByIdQuery, QueryByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<QueryByIdQuery, QueryByIdQueryVariables>(QueryByIdDocument, options);
+      }
+export function useQueryByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<QueryByIdQuery, QueryByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<QueryByIdQuery, QueryByIdQueryVariables>(QueryByIdDocument, options);
+        }
+export type QueryByIdQueryHookResult = ReturnType<typeof useQueryByIdQuery>;
+export type QueryByIdLazyQueryHookResult = ReturnType<typeof useQueryByIdLazyQuery>;
+export type QueryByIdQueryResult = Apollo.QueryResult<QueryByIdQuery, QueryByIdQueryVariables>;

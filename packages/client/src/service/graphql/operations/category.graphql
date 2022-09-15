@@ -1,0 +1,15 @@
+query getConsumptionType($familyId: Float) {
+
+  getConsumptionType(familyId: $familyId) {
+    id
+    pid
+    baseType
+    name
+    children {
+      id
+      pid
+      baseType
+      name
+    }
+  }
+}

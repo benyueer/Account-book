@@ -9,6 +9,14 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver } from '@nestjs/apollo';
 import { UserService } from './domain/user/user.service';
 import { AuthModule } from './domain/auth/auth.module';
+import { FamilyModule } from './domain/family/family.module';
+import { AccountModule } from './domain/account/account.module';
+import { ConsumptionTypeModule } from './domain/consumption_type/consumption_type.module';
+import { RecordModule } from './domain/record/record.module';
+import { Family } from './domain/family/entity/family.entity';
+import { Account } from './domain/account/entity/account.entity';
+import { ConsumptionType } from './domain/consumption_type/entity/consumption_type.entity';
+import { Record } from './domain/record/entity/record.rntity';
 
 @Module({
   imports: [
@@ -24,7 +32,7 @@ import { AuthModule } from './domain/auth/auth.module';
         password: configService.get('mysqlpwd'),
         database: configService.get('database'),
         synchronize: true,
-        entities: [User],
+        entities: [User, Family, Account, ConsumptionType, Record],
       }),
       inject: [ConfigService],
     }),
@@ -35,6 +43,10 @@ import { AuthModule } from './domain/auth/auth.module';
     }),
     UserModule,
     AuthModule,
+    FamilyModule,
+    AccountModule,
+    ConsumptionTypeModule,
+    RecordModule,
   ],
   controllers: [AppController],
   providers: [AppService],

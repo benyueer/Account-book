@@ -1,5 +1,6 @@
 import { createStore, combineReducers, applyMiddleware, compose, Middleware, Reducer } from 'redux';
 import reduxThunk from 'redux-thunk';
+import systemReducer, { SystemState } from './modules/system';
 import userReducer, { UserState } from "./modules/user"
 
 export interface IAction<T> {
@@ -9,10 +10,12 @@ export interface IAction<T> {
 
 export interface IStoreState {
   user: UserState
+  system: SystemState
 }
 
 const reducers: Reducer<IStoreState, IAction<any>> = combineReducers<IStoreState>({
-  user: userReducer
+  user: userReducer,
+  system: systemReducer
 })
 
 const middleware: Middleware[] = [reduxThunk];

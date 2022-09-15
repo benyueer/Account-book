@@ -1,6 +1,6 @@
 interface ILocalStore {
   setVal(key: string, val: any): ILocalStore
-  getVal(key: string): string | null
+  getVal<T>(key: string): T | null
   removeVal(key: string): ILocalStore
 }
 

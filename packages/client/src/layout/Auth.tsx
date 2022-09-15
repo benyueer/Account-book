@@ -1,20 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { IRoute } from '../router/config';
-import { baseRouters } from '../router/utils';
-import { useLoginMutation } from '../service/graphql/operations/auth.generated';
-import { getToken } from '../utils/utils'
+import { useQueryByIdLazyQuery } from '../service/graphql/operations/auth.generated';
+import { IAction, IStoreState } from '../store';
+import { UserState } from '../store/modules/user';
+import { getToken, getUserId } from '../utils/utils'
 
-interface AuthProps extends RouteComponentProps{
+interface AuthProps extends RouteComponentProps {
   route: IRoute;
   children: Function;
+  userId: number
 }
 
-export default function Auth(props: AuthProps) {
-  console.log(props)
-
-
-  if (!getToken()) {
+function Auth(props: AuthProps) {
+  const token = getToken();
+  if (!token) {
     return (
       <Redirect to="/system/login"></Redirect>
     )
@@ -29,5 +30,9 @@ export default function Auth(props: AuthProps) {
   return (
     <>{props.children(props)}</>
   )
-
 }
+
+export default connect(
+  ({ user }: IStoreState) => ({ userId: user.id }),
+  { }
+)(Auth)
