@@ -1,0 +1,10 @@
+query recordList($limit: Float!, $offset: Float!, $userIds: [Float!]!) {
+  recordList(limit: $limit, offset: $offset, userIds: $userIds) {
+    id
+    consumptionType
+    type
+    date
+    remark
+    imgs
+  }
+}

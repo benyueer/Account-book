@@ -30,9 +30,8 @@ export class Account extends BaseEntity {
   })
   type: ACCOUNT_TYPE;
 
-  @Field()
-  userId: number;
 
+  @Field(() => User)
   @ManyToOne(() => User, (user) => user.accounts)
   user: User;
 
@@ -58,4 +57,8 @@ export class Account extends BaseEntity {
   @Field()
   @Column({ default: 0 })
   incomeCount: number;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  icon: string
 }

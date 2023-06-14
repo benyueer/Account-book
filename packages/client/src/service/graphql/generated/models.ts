@@ -10,6 +10,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
+  DateTime: any;
 };
 
 export enum Account_Type {
@@ -21,13 +23,14 @@ export enum Account_Type {
 export type Account = {
   __typename?: 'Account';
   costCount: Scalars['Float'];
+  icon?: Maybe<Scalars['String']>;
   id: Scalars['Float'];
   incomeCount: Scalars['Float'];
   name: Scalars['String'];
   no: Scalars['String'];
   overage: Scalars['Float'];
   type: Account_Type;
-  userId: Scalars['Float'];
+  user: User;
 };
 
 export type AccountInput = {
@@ -58,6 +61,7 @@ export type ConsumptionTypeItem = {
   __typename?: 'ConsumptionTypeItem';
   baseType: Base_Type;
   children?: Maybe<Array<ConsumptionTypeItem>>;
+  icon?: Maybe<Scalars['String']>;
   id: Scalars['Float'];
   name: Scalars['String'];
   pid: Scalars['Float'];
@@ -87,6 +91,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createAccount: Account;
   createConsumptionType: ConsumptionType;
+  createRecord: Record;
   createUser: User;
   login: Token;
   updateAccount: Account;
@@ -101,6 +106,11 @@ export type MutationCreateAccountArgs = {
 
 export type MutationCreateConsumptionTypeArgs = {
   data: CreateTypeInput;
+};
+
+
+export type MutationCreateRecordArgs = {
+  data: RecordInput;
 };
 
 
@@ -127,13 +137,26 @@ export type MutationUpdateConsumptionTypeArgs = {
 export type Query = {
   __typename?: 'Query';
   getConsumptionType: Array<ConsumptionTypeItem>;
+  getFamilyMembers: Array<User>;
+  queryAccountListByUserId: Array<Account>;
   queryById: User;
   queryUserByName: User;
+  recordList: Array<Record>;
 };
 
 
 export type QueryGetConsumptionTypeArgs = {
   familyId?: InputMaybe<Scalars['Float']>;
+};
+
+
+export type QueryGetFamilyMembersArgs = {
+  id: Scalars['Float'];
+};
+
+
+export type QueryQueryAccountListByUserIdArgs = {
+  userId: Scalars['Float'];
 };
 
 
@@ -144,6 +167,41 @@ export type QueryQueryByIdArgs = {
 
 export type QueryQueryUserByNameArgs = {
   name: Scalars['String'];
+};
+
+
+export type QueryRecordListArgs = {
+  limit: Scalars['Float'];
+  offset: Scalars['Float'];
+  userIds: Array<Scalars['Float']>;
+};
+
+export enum Record_Type {
+  In = 'IN',
+  Out = 'OUT'
+}
+
+export type Record = {
+  __typename?: 'Record';
+  account: Account;
+  amount: Scalars['Float'];
+  consumptionType: Scalars['Float'];
+  date: Scalars['DateTime'];
+  id: Scalars['Float'];
+  imgs?: Maybe<Array<Scalars['String']>>;
+  remark?: Maybe<Scalars['String']>;
+  type: Record_Type;
+  users: User;
+};
+
+export type RecordInput = {
+  account: Scalars['Float'];
+  consumptionType: Scalars['Float'];
+  date: Scalars['DateTime'];
+  imgs?: InputMaybe<Array<Scalars['String']>>;
+  members: Array<Scalars['Float']>;
+  remark: Scalars['String'];
+  type: Record_Type;
 };
 
 export type Token = {

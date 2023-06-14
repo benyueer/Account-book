@@ -5,6 +5,7 @@ query getConsumptionType($familyId: Float) {
     pid
     baseType
     name
+    icon
     children {
       id
       pid

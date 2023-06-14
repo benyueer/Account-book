@@ -41,6 +41,9 @@ export class ConsumptionType extends BaseEntity {
 
   @Field()
   familyId: number;
+
+  @Column()
+  icon: string;
 }
 
 @ObjectType()
@@ -56,6 +59,9 @@ export class ConsumptionTypeItem {
 
   @Field(() => BASE_TYPE)
   baseType: BASE_TYPE;
+
+  @Field({ nullable: true })
+  icon: string;
 
   @Field(() => [ConsumptionTypeItem], { nullable: true, defaultValue: [] })
   children: ConsumptionTypeItem[]

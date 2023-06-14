@@ -1,0 +1,12 @@
+query queryAccountListByUserId($userId: Float!) {
+  queryAccountListByUserId(userId: $userId) {
+    id
+    name
+    no
+    overage
+    costCount
+    incomeCount
+    icon
+    type
+  }
+}

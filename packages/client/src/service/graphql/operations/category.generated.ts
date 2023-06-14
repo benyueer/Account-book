@@ -8,7 +8,7 @@ export type GetConsumptionTypeQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetConsumptionTypeQuery = { __typename?: 'Query', getConsumptionType: Array<{ __typename?: 'ConsumptionTypeItem', id: number, pid: number, baseType: Types.Base_Type, name: string, children?: Array<{ __typename?: 'ConsumptionTypeItem', id: number, pid: number, baseType: Types.Base_Type, name: string }> | null }> };
+export type GetConsumptionTypeQuery = { __typename?: 'Query', getConsumptionType: Array<{ __typename?: 'ConsumptionTypeItem', id: number, pid: number, baseType: Types.Base_Type, name: string, icon?: string | null, children?: Array<{ __typename?: 'ConsumptionTypeItem', id: number, pid: number, baseType: Types.Base_Type, name: string }> | null }> };
 
 
 export const GetConsumptionTypeDocument = gql`
@@ -18,6 +18,7 @@ export const GetConsumptionTypeDocument = gql`
     pid
     baseType
     name
+    icon
     children {
       id
       pid

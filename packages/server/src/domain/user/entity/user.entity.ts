@@ -6,6 +6,8 @@ import { Record } from 'src/domain/record/entity/record.rntity';
 import {
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -36,7 +38,8 @@ export class User {
   @OneToMany(() => Account, (account) => account.user)
   accounts: Account[];
 
-  @OneToMany(() => Record, (record) => record.user)
+  @ManyToMany(() => Record, record => record.users)
+  @JoinTable()
   records: Record[];
 
   @Column({ nullable: true })

@@ -1,16 +1,22 @@
 import { Reducer } from "redux"
 import { IAction } from ".."
+import { createAction } from 'redux-actions'
 import LocalStore from "../../utils/store"
+import { client } from "../../utils/apolloClient"
+import { GetFamilyMembersDocument, GetFamilyMembersQuery, GetFamilyMembersQueryVariables } from "../../service/graphql/operations/family.generated"
 
 const SET_USER_INFO = 'SET USER INFO'
 const USER_LOGOUT = 'USER LOGOUT'
+const SET_MEMBERS = 'SET_MEMBERS'
 
+export type Member = Pick<UserState, 'id' | 'name'>
 export interface UserState {
   token: String
   id: number
   familyId: number
   name: string
   avatar: string
+  members?: Member[]
 }
 
 const localUser = LocalStore.getVal<UserState>('USER_INFO')
@@ -21,8 +27,18 @@ const defaultUser: UserState = {
   name: '',
   familyId: 0,
   avatar: '',
+  members: [],
   ...localUser
 }
+
+export const setMembers = createAction(SET_MEMBERS, async (familyId: number) => {
+  const res = await client.query<GetFamilyMembersQuery, GetFamilyMembersQueryVariables>({
+    query: GetFamilyMembersDocument,
+    variables: { id: familyId }
+  })
+
+  return res.data.getFamilyMembers
+})
 
 export const setUserInfo: (user: Partial<UserState>) => IAction<Partial<UserState>> = (user: Partial<UserState>) => ({
   type: SET_USER_INFO,
@@ -51,6 +67,11 @@ const userReducer: Reducer<UserState, IAction<any>> = (
       window.location.href = `${window.location.origin}`
       return {
         ...defaultUser
+      }
+    case SET_MEMBERS:
+      return {
+        ...state,
+        members: payload
       }
     default:
       return state

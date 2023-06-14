@@ -20,4 +20,11 @@ export class AccountService {
     const res = await this.accountRepository.save(account);
     return res;
   }
+
+  async getAccountListByUserId(userId: number) {
+    return await this.accountRepository.find({
+      relations: ['user'],
+      where: { user: { id: userId } }
+    })
+  }
 }

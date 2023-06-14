@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 import { AccountService } from './account.service';
 import { AccountInput } from './dto/account.dto';
@@ -23,5 +23,10 @@ export class AccountResolver {
   @Mutation(() => Account)
   async updateAccount(@Args('data') data: AccountInput) {
     return await this.accountService.updateAccount(data);
+  }
+
+  @Query(() => [Account])
+  async queryAccountListByUserId(@Args('userId') userId: number) {
+    return await this.accountService.getAccountListByUserId(userId)
   }
 }

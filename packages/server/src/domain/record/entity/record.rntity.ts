@@ -1,40 +1,55 @@
-import { Field } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from 'src/common/base_entity';
 import { Account } from 'src/domain/account/entity/account.entity';
 import { User } from 'src/domain/user/entity/user.entity';
 import {
   Column,
   Entity,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+
+export enum RECORD_TYPE {
+  IN,
+  OUT
+}
+
+@ObjectType()
 @Entity()
 export class Record extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.records)
-  user: User;
-
-  @ManyToOne(() => Account, (account) => account.records)
-  account: Account;
+  @Field(() => User)
+  @ManyToMany(() => User, (user) => user.records)
+  users: User[];
 
   @Field()
   @Column()
-  type: number;
+  consumptionType: number
+
+  @Field(() => Account)
+  @ManyToOne(() => Account, (account) => account.records)
+  account: Account;
+
+  @Field(() => RECORD_TYPE)
+  @Column({
+    type: 'enum',
+    enum: RECORD_TYPE
+  })
+  type: RECORD_TYPE;
 
   @Field()
   @Column()
   date: Date;
 
-  @Column()
+  @Field()
+  @Column({nullable: true})
   amount: number;
-
-  @Column()
-  createBy: number;
 
   @Column()
   createAt: Date;
@@ -45,9 +60,11 @@ export class Record extends BaseEntity {
   @Column({ nullable: true })
   merchant: string;
 
+  @Field({ nullable: true })
   @Column({ nullable: true })
   remark: string;
 
-  @Column()
-  img: string;
+  @Field(() => [String], { nullable: true })
+  @Column('simple-array', { nullable: true })
+  imgs: string[];
 }

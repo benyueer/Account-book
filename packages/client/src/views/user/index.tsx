@@ -20,6 +20,7 @@ const actions: Action[] = [
 ]
 
 function User(props: UserProps) {
+  console.log(props)
 
   const settingAction = (item: Action) => {
     switch (item.key) {
@@ -46,9 +47,6 @@ function User(props: UserProps) {
             <SetOutline />
           </Popover.Menu>
           </div>
-        </div>
-        <div className={styles.dataBox}>
-
         </div>
       </div>
     </div>
