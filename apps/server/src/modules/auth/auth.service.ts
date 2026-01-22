@@ -17,8 +17,8 @@ export class AuthService {
     }
 
     const user = await this.usersService.create(
-      registerDto.name,
       registerDto.password,
+      registerDto.name,
     )
 
     return this.generateTokens(user.id, user.name)
