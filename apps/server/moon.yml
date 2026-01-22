@@ -1,0 +1,17 @@
+language: 'typescript'
+type: 'application'
+
+tasks:
+  dev:
+    command: 'pnpm run start:dev'
+    local: true
+  build:
+    command: 'pnpm run build'
+    inputs:
+      - 'src/**/*'
+      - 'nest-cli.json'
+      - 'tsconfig.json'
+    outputs:
+      - 'dist'
+  lint:
+    command: 'pnpm run lint'

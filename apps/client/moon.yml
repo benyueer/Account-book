@@ -1,0 +1,16 @@
+language: typescript
+type: application
+
+tasks:
+  dev:
+    command: vite
+    local: true
+  build:
+    command: vite build
+    inputs:
+      - 'src/**/*'
+      - vite.config.ts
+    outputs:
+      - dist
+  lint:
+    command: eslint .
