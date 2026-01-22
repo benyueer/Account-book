@@ -3,14 +3,14 @@ type: application
 
 tasks:
   dev:
-    command: vite
+    command: pnpm run dev
     local: true
   build:
-    command: vite build
+    command: pnpm run build
     inputs:
       - 'src/**/*'
       - vite.config.ts
     outputs:
       - dist
   lint:
-    command: eslint .
+    command: pnpm run lint

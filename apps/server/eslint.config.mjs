@@ -1,7 +1,7 @@
+import { fileURLToPath } from 'node:url'
 /// <reference types="node" />
 // @ts-check
 import antfu from '@antfu/eslint-config'
-import { fileURLToPath } from 'node:url'
 
 export default antfu({
   typescript: {
@@ -17,6 +17,8 @@ export default antfu({
     'style/array-element-newline': ['error', 'consistent'],
     'style/array-bracket-newline': ['error', { multiline: true }],
     'node/prefer-global/process': 'off',
+    'ts/strict-boolean-expressions': 'off',
+    'no-console': 'off',
   },
 }, {
   languageOptions: {

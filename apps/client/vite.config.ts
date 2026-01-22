@@ -31,4 +31,15 @@ export default defineConfig({
       },
     }),
   ],
+  server: {
+    host: '0.0.0.0',
+    port: 5100,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000', // Assuming NestJS runs on 3000
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/api/, ''),
+      },
+    },
+  },
 })
