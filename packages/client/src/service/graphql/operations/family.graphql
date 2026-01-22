@@ -1,6 +1,0 @@
-query getFamilyMembers($id: Float!) {
-  getFamilyMembers(id: $id) {
-    id
-    name
-  }
-}
