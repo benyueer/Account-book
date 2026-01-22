@@ -1,25 +1,10 @@
-import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, Length, Min } from 'class-validator'
+import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, Length, Min, IsUUID } from 'class-validator'
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 
 export enum TransactionType {
   INCOME = 'income', // 收入
   EXPENSE = 'expense', // 支出
-}
-
-export enum PaymentMethod {
-  CASH = 'cash', // 现金
-  ALIPAY = 'alipay', // 支付宝
-  WECHAT = 'wechat', // 微信
-  BANK_CARD = 'bankCard', // 银行卡
-  CREDIT_CARD = 'creditCard', // 信用卡
-  OTHER = 'other', // 其他
-}
-
-export enum TransactionStatus {
-  PENDING = 'pending', // 待处理
-  COMPLETED = 'completed', // 已完成
-  FAILED = 'failed', // 已失败
-  CANCELLED = 'cancelled', // 已取消
+  NO_COUNT = 'noCount', // 不计
 }
 
 @Entity('transactions')
@@ -63,14 +48,15 @@ export class Transaction {
   @Min(0)
   amount: number
 
-  @Column({ name: 'paymentMethod', nullable: true, type: 'enum', enum: PaymentMethod, comment: '收/付款方式/支付方式' })
+  @Column({ name: 'paymentMethod', nullable: true, comment: '收/付款方式/支付方式' })
   @IsOptional()
-  @IsEnum(PaymentMethod)
-  paymentMethod: PaymentMethod
+  @IsString()
+  @Length(1, 100)
+  paymentMethod: string
 
-  @Column({ name: 'transactionStatus', nullable: false, type: 'enum', enum: TransactionStatus, default: TransactionStatus.COMPLETED, comment: '交易状态/当前状态' })
-  @IsEnum(TransactionStatus)
-  transactionStatus: TransactionStatus
+  @Column({ name: 'transactionStatus', nullable: false, default: 'completed', comment: '交易状态/当前状态' })
+  @IsString()
+  transactionStatus: string
 
   @Column({ name: 'transactionOrderNumber', nullable: true, unique: true, comment: '交易订单号/交易单号' })
   @IsOptional()
@@ -89,9 +75,21 @@ export class Transaction {
   @IsString()
   notes: string
 
+  @Column({ name: 'sourceCard', nullable: true, type: 'text', comment: '来源银行卡' })
+  @IsOptional()
+  @IsString()
+  sourceCard: string
+
   @CreateDateColumn({ name: 'createdAt', comment: '创建时间' })
   createdAt: Date
 
   @UpdateDateColumn({ name: 'updatedAt', comment: '更新时间' })
   updatedAt: Date
+
+  @Column({ name: 'deleteAt', nullable: true, comment: '删除时间' })
+  deleteAt: Date
+
+  @Column({ name: 'userId', type: 'uuid' })
+  @IsUUID()
+  userId: string
 }

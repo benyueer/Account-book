@@ -4,9 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { dataSourceOptions } from '../ormconfig'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { AuthModule } from './auth/auth.module'
-import { TransactionsModule } from './transactions/transactions.module'
-import { UsersModule } from './users/users.module'
+import { AuthModule } from './modules/auth/auth.module'
+import { TransactionsModule } from './modules/transactions/transactions.module'
+import { UsersModule } from './modules/users/users.module'
 
 @Module({
   imports: [
