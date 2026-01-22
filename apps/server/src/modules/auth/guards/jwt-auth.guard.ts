@@ -1,8 +1,10 @@
 import { ExecutionContext, Injectable } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { AuthGuard } from '@nestjs/passport'
+import { Observable, lastValueFrom } from 'rxjs'
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator'
 import * as rolesDecorator from '../decorators/roles.decorator'
+
 const { ROLES_KEY } = rolesDecorator
 
 @Injectable()
@@ -11,7 +13,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     super()
   }
 
-  canActivate(context: ExecutionContext) {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     // 检查是否是公共路由
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
@@ -23,7 +25,11 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
 
     // 执行默认的 JWT 验证
-    return super.canActivate(context)
+    const result = await super.canActivate(context)
+    if (result instanceof Observable) {
+      return lastValueFrom(result)
+    }
+    return result
   }
 
   handleRequest(err: any, user: any, info: any, context: any) {
@@ -42,7 +48,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       return user
     }
 
-    const hasRole = requiredRoles.some((role) => user.roles?.includes(role))
+    const hasRole = requiredRoles.some(role => user.roles?.includes(role))
     if (!hasRole) {
       throw new Error('权限不足')
     }

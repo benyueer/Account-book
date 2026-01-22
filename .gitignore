@@ -34,3 +34,5 @@ coverage
 # TypeScript
 *.tsbuildinfo
 */.DS_Store
+
+dev-dist

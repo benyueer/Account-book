@@ -1,8 +1,9 @@
-import { ValidationPipe, HttpStatus } from '@nestjs/common'
+import { HttpStatus, ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
 import { HttpExceptionFilter } from './common/filters/http-exception.filter'
+import { TransformInterceptor } from './common/interceptors/transform.interceptor'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -10,6 +11,9 @@ async function bootstrap() {
   // Enable CORS
   app.enableCors()
   app.setGlobalPrefix('v1')
+
+  // 全局响应拦截器
+  app.useGlobalInterceptors(new TransformInterceptor())
 
   // 全局验证管道
   app.useGlobalPipes(

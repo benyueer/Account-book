@@ -1,9 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 import { AuthGuard } from "../components/AuthGuard";
-import Add from "../pages/Add";
+import { Layout } from "../components/Layout";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
-import Settings from "../pages/Settings";
+import Profile from "../pages/Profile";
+import Statistics from "../pages/Statistics";
 
 export const router = createBrowserRouter([
   {
@@ -15,15 +16,21 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home />,
-      },
-      {
-        path: "/add",
-        element: <Add />,
-      },
-      {
-        path: "/settings",
-        element: <Settings />,
+        element: <Layout />,
+        children: [
+          {
+            index: true,
+            element: <Home />,
+          },
+          {
+            path: "statistics",
+            element: <Statistics />, // Ensure Statistics/index.tsx exists and has default export
+          },
+          {
+            path: "profile",
+            element: <Profile />, // Ensure Profile/index.tsx exists and has default export
+          },
+        ],
       },
     ],
   },

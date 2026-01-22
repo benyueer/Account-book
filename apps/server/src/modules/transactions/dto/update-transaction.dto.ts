@@ -1,9 +1,8 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateTransactionDto } from './create-transaction.dto';
-import { ApiProperty } from '@nestjs/swagger';
+import { PartialType } from '@nestjs/mapped-types'
+import { ApiProperty } from '@nestjs/swagger'
+import { CreateTransactionDto } from './create-transaction.dto'
 
 export class UpdateTransactionDto extends PartialType(CreateTransactionDto) {
-
-  @ApiProperty({example: 'asdasdasfewf'})
+  @ApiProperty({ example: 'asdasdasfewf' })
   id: string
 }

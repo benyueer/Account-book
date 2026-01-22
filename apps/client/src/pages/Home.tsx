@@ -1,6 +1,15 @@
+import { motion } from "framer-motion";
+import LiquidGlass from "liquid-glass-react";
+
 export default function Home() {
   return (
-    <div className="p-4">
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 20 }}
+      transition={{ duration: 0.3 }}
+      className="p-4 min-h-full"
+    >
       <h1 className="mb-4 text-2xl font-bold">账目列表</h1>
       <div className="flex flex-col gap-2">
         <div className="border border-white/10 rounded-xl bg-white/5 p-4 backdrop-blur-md">
@@ -10,6 +19,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </div>
-  )
+    </motion.div>
+  );
 }

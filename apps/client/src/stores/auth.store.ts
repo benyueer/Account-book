@@ -21,7 +21,10 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       login: (token, user) => set({ token, user }),
       logout: () => set({ token: null, user: null }),
-      isAuthenticated: () => !!get().token,
+      isAuthenticated: () => {
+        const token = get().token
+        return Boolean(token && token.trim() !== '')
+      },
     }),
     {
       name: 'auth-storage', // name of the item in the storage (must be unique)
