@@ -20,7 +20,7 @@ export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> 
     next: CallHandler,
   ): Observable<Response<T>> {
     return next.handle().pipe(
-      map((data) => ({
+      map(data => ({
         code: 200,
         data,
         msg: 'success',

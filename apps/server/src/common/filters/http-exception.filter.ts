@@ -56,7 +56,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     // 记录错误日志
     this.logger.error(
       `Http Status: ${status} Error: ${JSON.stringify(exception)}`,
-      exception instanceof Error ? exception.stack : ''
+      exception instanceof Error ? exception.stack : '',
     )
 
     // 统一响应格式
@@ -66,7 +66,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       data: null,
       msg: errorMessage || '请求处理失败',
       timestamp: new Date().toISOString(),
-      path: request.url
+      path: request.url,
     })
   }
 }

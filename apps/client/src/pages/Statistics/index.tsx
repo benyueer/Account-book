@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion'
 
 export default function Statistics() {
   return (
@@ -7,39 +7,39 @@ export default function Statistics() {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20 }}
       transition={{ duration: 0.3 }}
-      className="p-4 min-h-full"
+      className="min-h-full p-4"
     >
-      <h1 className="text-2xl font-600 mb-6 text-slate-800">统计</h1>
+      <h1 className="mb-6 text-2xl text-slate-800 font-600">统计</h1>
 
       <motion.div
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
-        className="h-[200px] bg-gradient-to-br from-indigo-500 to-violet-500 rounded-2xl flex items-center justify-center text-white font-600 mb-5 shadow-sm"
+        className="mb-5 h-[200px] flex items-center justify-center rounded-2xl from-indigo-500 to-violet-500 bg-gradient-to-br text-white font-600 shadow-sm"
       >
         消费趋势图
       </motion.div>
 
-      <div className="grid grid-cols-2 gap-4 mb-5">
+      <div className="grid grid-cols-2 mb-5 gap-4">
         <motion.div
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
-          className="bg-white rounded-xl p-4 shadow-sm"
+          className="rounded-xl bg-white p-4 shadow-sm"
         >
           <div>本月支出</div>
-          <div className="text-xl font-bold text-red-500">¥0.00</div>
+          <div className="text-xl text-red-500 font-bold">¥0.00</div>
         </motion.div>
 
         <motion.div
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
-          className="bg-white rounded-xl p-4 shadow-sm"
+          className="rounded-xl bg-white p-4 shadow-sm"
         >
           <div>本月收入</div>
-          <div className="text-xl font-bold text-emerald-500">¥0.00</div>
+          <div className="text-xl text-emerald-500 font-bold">¥0.00</div>
         </motion.div>
       </div>
 
       {/* 这里可以添加更多统计内容 */}
     </motion.div>
-  );
+  )
 }

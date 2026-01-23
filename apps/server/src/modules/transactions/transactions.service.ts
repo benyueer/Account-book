@@ -1,4 +1,4 @@
-import { GroupedTransactions, TransactionType } from '@account-book/types'
+import { TransactionType } from '@account-book/types'
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Between, FindOptionsOrder, FindOptionsWhere, QueryFailedError, Repository } from 'typeorm'

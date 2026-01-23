@@ -1,44 +1,45 @@
-import { createBrowserRouter } from "react-router-dom";
-import { AuthGuard } from "../components/AuthGuard";
-import { Layout } from "../components/Layout";
-import Home from "../pages/Home";
-import Login from "../pages/Login";
-import Profile from "../pages/Profile";
-import Statistics from "../pages/Statistics";
-import Detail from "../pages/Detail";
-import ImportRecords from "../pages/ImportRecords";
+import { createBrowserRouter } from 'react-router-dom'
+import { AuthGuard } from '../components/AuthGuard'
+import { Layout } from '../components/Layout'
+import Detail from '../pages/Detail'
+import Home from '../pages/Home'
+import ImportRecords from '../pages/ImportRecords'
+import Login from '../pages/Login'
+import Profile from '../pages/Profile'
+import Statistics from '../pages/Statistics'
+
 export const router = createBrowserRouter([
   {
-    path: "/login",
+    path: '/login',
     element: <Login />,
   },
   {
     element: <AuthGuard />,
     children: [
       {
-        path: "/",
+        path: '/',
         element: <Layout />,
         children: [
           {
-            path: "",
+            path: '',
             element: <Home />,
             children: [
               {
-                path: "detail/:id",
+                path: 'detail/:id',
                 element: <Detail />,
               },
             ],
           },
           {
-            path: "statistics",
+            path: 'statistics',
             element: <Statistics />,
           },
           {
-            path: "profile",
+            path: 'profile',
             element: <Profile />,
             children: [
               {
-                path: "import-records",
+                path: 'import-records',
                 element: <ImportRecords />,
               },
             ],
@@ -47,4 +48,4 @@ export const router = createBrowserRouter([
       },
     ],
   },
-]);
+])
