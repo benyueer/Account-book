@@ -19,6 +19,9 @@ export default antfu({
     'node/prefer-global/process': 'off',
     'ts/strict-boolean-expressions': 'off',
     'no-console': 'off',
+    'ts/no-unsafe-member-access': 'off',
+    'ts/no-unsafe-assignment': 'off',
+    'ts/no-unsafe-call': 'off',
   },
 }, {
   languageOptions: {

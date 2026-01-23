@@ -1,0 +1,13 @@
+language: typescript
+type: library
+
+tasks:
+  build:
+    command: pnpm exec tsc
+    outputs:
+      - dist
+    inputs:
+      - src/**/*
+      - tsconfig.json
+  typecheck:
+    command: tsc --noEmit

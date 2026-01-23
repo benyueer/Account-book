@@ -1,14 +1,11 @@
+import { Transaction as TransactionInterface, TransactionType } from '@account-book/types'
 import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, IsUUID, Length, Min } from 'class-validator'
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 
-export enum TransactionType {
-  INCOME = 'income', // 收入
-  EXPENSE = 'expense', // 支出
-  NO_COUNT = 'noCount', // 不计
-}
+export { TransactionType }
 
 @Entity('transactions')
-export class Transaction {
+export class Transaction implements TransactionInterface {
   @PrimaryGeneratedColumn('uuid')
   id: string
 

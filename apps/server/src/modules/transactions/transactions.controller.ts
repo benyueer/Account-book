@@ -1,27 +1,28 @@
+import { RequestWithUser } from '@account-book/types'
 import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-  Request,
-  UseInterceptors,
-  ClassSerializerInterceptor,
-  Query,
-  ParseIntPipe,
-  DefaultValuePipe,
   BadRequestException,
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  DefaultValuePipe,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  Request,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags, ApiQuery } from '@nestjs/swagger'
+
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
-import { Transaction } from './entities/transaction.entity'
-import { TransactionsService } from './transactions.service'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
+
 import { UpdateTransactionDto } from './dto/update-transaction.dto'
-import { PaginationDto } from '../../common/dto/pagination.dto'
+import { TransactionsService } from './transactions.service'
 
 @ApiTags('transactions')
 @ApiBearerAuth()
@@ -29,7 +30,7 @@ import { PaginationDto } from '../../common/dto/pagination.dto'
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class TransactionsController {
-  constructor(private readonly service: TransactionsService) {}
+  constructor(private readonly service: TransactionsService) { }
 
   @Get()
   @ApiOperation({ summary: '获取交易记录列表' })
@@ -39,12 +40,14 @@ export class TransactionsController {
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiQuery({ name: 'startDate', required: false, type: Date })
   @ApiQuery({ name: 'endDate', required: false, type: Date })
+  @ApiQuery({ name: 'type', required: false, enum: ['income', 'expense'] })
   async findAll(
-    @Request() req,
+    @Request() req: RequestWithUser,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
+    @Query('type') type?: string,
   ) {
     if (page < 1) {
       throw new BadRequestException('页码必须大于0')
@@ -53,22 +56,29 @@ export class TransactionsController {
       throw new BadRequestException('每页数量必须在1-100之间')
     }
 
-    const filters: { startDate?: Date; endDate?: Date } = {}
-    
+    const filters: { startDate?: Date, endDate?: Date, type?: string } = {}
+
     if (startDate) {
       const date = new Date(startDate)
-      if (isNaN(date.getTime())) {
+      if (Number.isNaN(date.getTime())) {
         throw new BadRequestException('开始日期格式不正确')
       }
       filters.startDate = date
     }
-    
+
     if (endDate) {
       const date = new Date(endDate)
-      if (isNaN(date.getTime())) {
+      if (Number.isNaN(date.getTime())) {
         throw new BadRequestException('结束日期格式不正确')
       }
       filters.endDate = date
+    }
+
+    if (type) {
+      if (!['income', 'expense'].includes(type)) {
+        throw new BadRequestException('交易类型错误')
+      }
+      filters.type = type
     }
 
     return this.service.findAll(
@@ -85,7 +95,7 @@ export class TransactionsController {
   @ApiResponse({ status: 401, description: '未授权' })
   async create(
     @Body() createTransactionDto: CreateTransactionDto,
-    @Request() req,
+    @Request() req: RequestWithUser,
   ) {
     return this.service.create(createTransactionDto, req.user.userId)
   }
@@ -97,7 +107,7 @@ export class TransactionsController {
   @ApiResponse({ status: 401, description: '未授权' })
   async findOne(
     @Param('id') id: string,
-    @Request() req,
+    @Request() req: RequestWithUser,
   ) {
     return this.service.findOneById(id, req.user.userId)
   }
@@ -111,7 +121,7 @@ export class TransactionsController {
   async update(
     @Param('id') id: string,
     @Body() updateTransactionDto: UpdateTransactionDto,
-    @Request() req,
+    @Request() req: RequestWithUser,
   ) {
     return this.service.update(id, updateTransactionDto, req.user.userId)
   }
@@ -123,7 +133,7 @@ export class TransactionsController {
   @ApiResponse({ status: 401, description: '未授权' })
   async remove(
     @Param('id') id: string,
-    @Request() req,
+    @Request() req: RequestWithUser,
   ) {
     return this.service.remove(id, req.user.userId)
   }

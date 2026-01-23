@@ -1,10 +1,6 @@
+import type { User } from '@account-book/types'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-
-interface User {
-  id: string
-  name: string
-}
 
 interface AuthState {
   token: string | null
@@ -23,7 +19,7 @@ export const useAuthStore = create<AuthState>()(
       logout: () => set({ token: null, user: null }),
       isAuthenticated: () => {
         const token = get().token
-        return Boolean(token && token.trim() !== '')
+        return token !== null && token.trim() !== ''
       },
     }),
     {

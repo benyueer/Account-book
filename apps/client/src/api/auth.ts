@@ -1,3 +1,4 @@
+import type { User } from '@account-book/types'
 import apiClient from './axios'
 
 export interface LoginDto {
@@ -5,14 +6,9 @@ export interface LoginDto {
   password?: string
 }
 
-export interface UserInfo {
-  id: string
-  name: string
-}
-
 export interface AuthData {
   accessToken: string
-  user: UserInfo
+  user: User
 }
 
 export interface BaseResponse<T = any> {
@@ -24,7 +20,7 @@ export interface BaseResponse<T = any> {
 export type AuthResponse = BaseResponse<AuthData>
 
 // 登录接口返回的数据结构
-export interface LoginResponse extends AuthData {}
+export interface LoginResponse extends AuthData { }
 
 // 登录接口的响应类型
 export type LoginApiResponse = BaseResponse<LoginResponse>

@@ -1,7 +1,8 @@
+import { User as UserInterface } from '@account-book/types'
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 
 @Entity('users')
-export class User {
+export class User implements UserInterface {
   @PrimaryGeneratedColumn('uuid')
   id: string
 

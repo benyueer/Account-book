@@ -22,6 +22,10 @@ export default antfu({
     'array-bracket-newline': ['error', { multiline: true }],
     'style/jsx-first-prop-new-line': ['error', 'multiline'],
     'style/jsx-max-props-per-line': ['error', { maximum: 1, when: 'multiline' }],
+    'ts/no-unsafe-assignment': 'off',
+    'ts/no-unsafe-argument': 'off',
+    'ts/strict-boolean-expressions': 'off',
+    'ts/no-unsafe-member-access': 'off',
   },
   // 忽略文件
   ignores: [

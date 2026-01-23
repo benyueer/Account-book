@@ -5,6 +5,8 @@ import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Profile from "../pages/Profile";
 import Statistics from "../pages/Statistics";
+import Detail from "../pages/Detail";
+import KeepAlive from "react-activation";
 
 export const router = createBrowserRouter([
   {
@@ -20,15 +22,19 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <Home />,
+            element: <KeepAlive id="main-route"><Home /></KeepAlive>,
           },
           {
             path: "statistics",
-            element: <Statistics />, // Ensure Statistics/index.tsx exists and has default export
+            element: <Statistics />,
           },
           {
             path: "profile",
-            element: <Profile />, // Ensure Profile/index.tsx exists and has default export
+            element: <Profile />,
+          },
+          {
+            path: "detail/:id",
+            element: <Detail />,
           },
         ],
       },

@@ -1,5 +1,6 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useSystemStore } from "../../stores/system.store";
 
 const tabs = [
   { path: "/", label: "账单", icon: "i-mdi-wallet-outline" },
@@ -10,36 +11,49 @@ const tabs = [
 export const TabBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { tabBarVisible } = useSystemStore();
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[400px] h-[64px] bg-white/25 backdrop-blur-xl rounded-2xl flex justify-around items-center px-2 shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] z-100 overflow-hidden border border-white/20 ring-1 ring-white/30">
-      {tabs.map((tab) => {
-        const isActive = location.pathname === tab.path;
-        return (
-          <div
-            key={tab.path}
-            className={`flex flex-col items-center justify-center cursor-pointer py-1 px-4 relative z-1 transition-colors duration-300 ${
-              isActive ? "text-indigo-600" : "text-slate-500"
-            }`}
-            onClick={() => navigate(tab.path)}
-          >
-            {isActive && (
-              <motion.div
-                layoutId="activeTab"
-                className="absolute inset-0 bg-blue/60 rounded-xl -z-10 shadow-sm"
-                transition={{
-                  type: "spring",
-                  stiffness: 300,
-                  damping: 20
-                }}
-              />
-            )}
+    <AnimatePresence>
+      {tabBarVisible && (
+        <motion.div
+          initial={{ y: 100, x: "-50%", opacity: 0 }}
+          animate={{ y: 0, x: "-50%", opacity: 1 }}
+          exit={{ y: 100, x: "-50%", opacity: 0 }}
+          transition={{ type: "spring", damping: 25, stiffness: 200 }}
+          className="fixed bottom-6 left-1/2 w-[90%] max-w-[400px] h-[64px] bg-white/25 backdrop-blur-xl rounded-2xl flex justify-around items-center px-2 shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] z-100 overflow-hidden border border-white/20 ring-1 ring-white/30"
+        >
+          {tabs.map((tab) => {
+            const isActive = location.pathname === tab.path;
+            return (
+              <div
+                key={tab.path}
+                className={`flex flex-col items-center justify-center cursor-pointer py-1 px-4 relative z-1 transition-colors duration-300 ${
+                  isActive ? "text-indigo-600" : "text-slate-500"
+                }`}
+                onClick={() => navigate(tab.path)}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute inset-0 bg-blue/20 rounded-full -z-10 shadow-sm"
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 20,
+                    }}
+                  />
+                )}
 
-            <div className={`text-2xl mb-0.5 ${tab.icon} relative z-10`} />
-            <div className="text-[10px] font-medium relative z-10">{tab.label}</div>
-          </div>
-        );
-      })}
-    </div>
+                <div className={`text-2xl mb-0.5 ${tab.icon} relative z-10`} />
+                <div className="text-[10px] font-medium relative z-10">
+                  {tab.label}
+                </div>
+              </div>
+            );
+          })}
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
