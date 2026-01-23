@@ -33,7 +33,7 @@ export class ImportRecordController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
   ) {
-    return this.service.findAll(req.user.userId, page, limit)
+    return this.service.findAll(req.user.userId as string, page, limit)
   }
 
   @Post('upload')
@@ -46,7 +46,7 @@ export class ImportRecordController {
   ) {
     // 这里使用模拟逻辑，不保存真实文件
     return this.service.uploadSimulated(
-      req.user.userId,
+      req.user.userId as string,
       file?.originalname || 'unknown',
       file?.mimetype || 'application/octet-stream',
     )

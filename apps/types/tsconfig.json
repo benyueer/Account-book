@@ -12,5 +12,5 @@
   },
   "include": [
     "src/**/*"
-  ]
+, "src/auth.ts"  ]
 }

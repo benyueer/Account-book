@@ -1,18 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { NavBar, DotLoading, ErrorBlock, Card, List } from "antd-mobile";
 import { motion } from "framer-motion";
-import { transactionService } from "../api/transactions";
-import type { Transaction } from "@account-book/types";
+import { useTransaction } from "../hooks/api/useTransactions";
 import { useSystemStore } from "../stores/system.store";
 
 const Detail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [transaction, setTransaction] = useState<Transaction | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const { hideTabBar, showTabBar } = useSystemStore();
+
+  const { data: transaction, isLoading, error } = useTransaction(id || "");
 
   useEffect(() => {
     hideTabBar();
@@ -21,30 +19,8 @@ const Detail: React.FC = () => {
     };
   }, [hideTabBar, showTabBar]);
 
-  useEffect(() => {
-    const fetchTransaction = async () => {
-      if (!id) {
-        setError("交易 ID 丢失");
-        setLoading(false);
-        return;
-      }
-      try {
-        setLoading(true);
-        const data = await transactionService.findOne(id);
-        setTransaction(data);
-      } catch (err: any) {
-        console.error("Failed to fetch transaction:", err);
-        setError(err.response?.data?.message || "无法加载交易详情");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTransaction();
-  }, [id]);
-
   const renderContent = () => {
-    if (loading) {
+    if (isLoading) {
       return (
         <div className="flex flex-col items-center justify-center py-20">
           <DotLoading color="primary" />
@@ -59,7 +35,11 @@ const Detail: React.FC = () => {
           <ErrorBlock
             status="disconnected"
             title="查询失败"
-            description={error}
+            description={
+              (error as any)?.response?.data?.message ||
+              error.message ||
+              "无法加载交易详情"
+            }
           />
         </div>
       );

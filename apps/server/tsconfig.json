@@ -7,6 +7,11 @@
     "baseUrl": "./",
     "module": "commonjs",
     "moduleResolution": "node",
+    "paths": {
+      "@account-book/types": [
+        "../types/dist/index.d.ts"
+      ]
+    },
     "strictBindCallApply": false,
     "strictNullChecks": true,
     "noFallthroughCasesInSwitch": false,

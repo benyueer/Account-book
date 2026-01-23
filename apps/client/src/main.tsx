@@ -1,4 +1,10 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  QueryCache,
+  MutationCache,
+} from "@tanstack/react-query";
+import { Toast } from "antd-mobile";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import { registerSW } from "virtual:pwa-register";
@@ -7,7 +13,28 @@ import "./index.css";
 
 import "virtual:uno.css";
 
-const queryClient = new QueryClient();
+const handleGlobalError = (error: any) => {
+  const message = error.message || "请求失败，请稍后重试";
+  Toast.show({
+    content: message,
+    position: "top",
+  });
+};
+
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: handleGlobalError,
+  }),
+  mutationCache: new MutationCache({
+    onError: handleGlobalError,
+  }),
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 registerSW({
   onOfflineReady() {

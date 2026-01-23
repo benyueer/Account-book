@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   PullToRefresh,
@@ -12,51 +12,36 @@ import {
   Empty,
 } from "antd-mobile";
 import { useNavigate } from "react-router-dom";
-import { importRecordService } from "../api/import-records";
+import {
+  useImportRecords,
+  useUploadRecord,
+} from "../hooks/api/useImportRecords";
 import { ImportRecordStatus } from "@account-book/types";
-import type { ImportRecord } from "@account-book/types";
 import dayjs from "dayjs";
 
 export default function ImportRecords() {
   const navigate = useNavigate();
-  const [data, setData] = useState<ImportRecord[]>([]);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
-  const [isUploading, setIsUploading] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const loadMore = async (isReset = false) => {
-    const currentPage = isReset ? 1 : page;
-    try {
-      const response = await importRecordService.findAll({
-        page: currentPage,
-        limit: 15,
-      });
-      if (isReset) {
-        setData(response.items);
-      } else {
-        setData((prev) => [...prev, ...response.items]);
-      }
-      setPage(currentPage + 1);
-      setHasMore(currentPage < response.totalPages);
-    } catch (e) {
-      console.error(e);
-      setHasMore(false);
-    } finally {
-      setIsInitialLoading(false);
-    }
+  const { data, isLoading, refetch } = useImportRecords({
+    page,
+    limit: 15,
+  }) as { data: any; isLoading: boolean; refetch: any };
+  const uploadMutation = useUploadRecord();
+
+  // 由于后端没提供标准的 useInfiniteQuery 结构，这里手动处理分页加载
+  const handleLoadMore = async () => {
+    setPage((p) => p + 1);
   };
 
-  useEffect(() => {
-    loadMore(true);
-  }, []);
+  const handleRefresh = async () => {
+    setPage(1);
+    await refetch();
+  };
 
   const handleUpload = async (file: File) => {
-    if (isUploading) return;
-
-    setIsUploading(true);
     const toast = Toast.show({
       icon: <DotLoading />,
       content: "正在上传...",
@@ -66,31 +51,30 @@ export default function ImportRecords() {
     const abortController = new AbortController();
     abortControllerRef.current = abortController;
 
-    try {
-      await importRecordService.upload(file, undefined, abortController.signal);
-      Toast.show({
-        icon: "success",
-        content: "上传成功，后台处理中",
-      });
-      // 重新加载列表
-      loadMore(true);
-    } catch (e: any) {
-      if (e.name === "CanceledError" || e.name === "AbortError") {
-        Toast.show("上传已取消");
-      } else {
-        Toast.show({
-          icon: "fail",
-          content: "上传失败",
-        });
-      }
-    } finally {
-      setIsUploading(false);
-      toast.close();
-      abortControllerRef.current = null;
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    }
+    uploadMutation.mutate(
+      {
+        file,
+        abortSignal: abortController.signal,
+      },
+      {
+        onSuccess: () => {
+          Toast.show({ icon: "success", content: "上传成功" });
+          handleRefresh();
+        },
+        onError: (e: any) => {
+          if (e.name === "CanceledError" || e.name === "AbortError") {
+            Toast.show("上传已取消");
+          } else {
+            Toast.show({ icon: "fail", content: "上传失败" });
+          }
+        },
+        onSettled: () => {
+          toast.close();
+          abortControllerRef.current = null;
+          if (fileInputRef.current) fileInputRef.current.value = "";
+        },
+      },
+    );
   };
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,7 +115,7 @@ export default function ImportRecords() {
       <div className="p-4 bg-white mb-2 flex justify-between items-center shadow-sm">
         <span className="text-sm text-slate-500">账单导入历史</span>
         <div className="flex gap-2">
-          {isUploading && (
+          {uploadMutation.isPending && (
             <Button
               size="small"
               color="danger"
@@ -151,7 +135,7 @@ export default function ImportRecords() {
           <Button
             size="small"
             color="primary"
-            loading={isUploading}
+            loading={uploadMutation.isPending}
             onClick={() => fileInputRef.current?.click()}
           >
             导入账单
@@ -159,20 +143,20 @@ export default function ImportRecords() {
         </div>
       </div>
 
-      <PullToRefresh onRefresh={() => loadMore(true)}>
+      <PullToRefresh onRefresh={handleRefresh}>
         <div className="h-[calc(100vh-120px)] overflow-y-auto">
-          {isInitialLoading && data.length === 0 ? (
+          {isLoading && (!data || data.items.length === 0) ? (
             <div className="flex flex-col items-center justify-center py-20">
               <DotLoading color="primary" />
               <span className="text-xs text-slate-400 mt-2">
                 正在加载记录...
               </span>
             </div>
-          ) : data.length === 0 ? (
+          ) : !data || data.items.length === 0 ? (
             <Empty description="暂无导入记录" className="py-20" />
           ) : (
             <List className="bg-transparent">
-              {data.map((item) => (
+              {data.items.map((item: any) => (
                 <List.Item
                   key={item.id}
                   className="mb-2 mx-4 rounded-xl shadow-sm border-none bg-white"
@@ -217,18 +201,21 @@ export default function ImportRecords() {
                       {item.fileName}
                     </span>
                     <Tag
-                      color={statusMap[item.status].color}
+                      color={statusMap[item.status as ImportRecordStatus].color}
                       fill="outline"
                       className="rounded-md px-1.5 py-0.5 text-[10px]"
                     >
-                      {statusMap[item.status].text}
+                      {statusMap[item.status as ImportRecordStatus].text}
                     </Tag>
                   </div>
                 </List.Item>
               ))}
             </List>
           )}
-          <InfiniteScroll loadMore={() => loadMore(false)} hasMore={hasMore} />
+          <InfiniteScroll
+            loadMore={handleLoadMore}
+            hasMore={data ? page < data.totalPages : false}
+          />
         </div>
       </PullToRefresh>
     </motion.div>

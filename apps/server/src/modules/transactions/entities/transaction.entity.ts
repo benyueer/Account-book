@@ -2,8 +2,6 @@ import { Transaction as TransactionInterface, TransactionType } from '@account-b
 import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, IsUUID, Length, Min } from 'class-validator'
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 
-export { TransactionType }
-
 @Entity('transactions')
 export class Transaction implements TransactionInterface {
   @PrimaryGeneratedColumn('uuid')
@@ -20,7 +18,7 @@ export class Transaction implements TransactionInterface {
   transactionCategory: string
 
   @Column({ name: 'transactionType', nullable: false, type: 'enum', enum: TransactionType, comment: '收/支' })
-  @IsEnum(TransactionType)
+  @IsEnum(TransactionType as object)
   transactionType: TransactionType
 
   @Column({ name: 'counterparty', nullable: true, comment: '交易对方' })

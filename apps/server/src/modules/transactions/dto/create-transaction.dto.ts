@@ -1,6 +1,6 @@
+import { TransactionType } from '@account-book/types'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, Length, Min } from 'class-validator'
-import { TransactionType } from '../entities/transaction.entity'
 
 export class CreateTransactionDto {
   @ApiProperty({ example: '2025-01-22T16:08:05.626Z', nullable: true, default: () => new Date() })

@@ -1,125 +1,85 @@
-import { useEffect, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PullToRefresh, Empty, DotLoading } from "antd-mobile";
 import { Outlet } from "react-router-dom";
 import { FilterBar } from "../components/Home/FilterBar";
 import { TransactionList } from "../components/Home/TransactionList";
-import { transactionService } from "../api/transactions";
-import type { GroupedTransactions, Transaction } from "@account-book/types";
+import { useTransactions } from "../hooks/api/useTransactions";
+import type { Transaction } from "@account-book/types";
 
 export default function Home() {
-  const [data, setData] = useState<GroupedTransactions[]>([]);
-  const [totals, setTotals] = useState({ income: 0, expense: 0 });
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
   const [filterType, setFilterType] = useState<string | undefined>(undefined);
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
-  const loadingRef = useRef(false);
+  const filters = useMemo(() => {
+    const params: any = { type: filterType };
+    if (currentDate) {
+      params.startDate = currentDate.toISOString();
+      params.endDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() + 1,
+        0,
+        23,
+        59,
+        59,
+      ).toISOString();
+    }
+    return params;
+  }, [currentDate, filterType]);
 
-  const buildGroups = (items: Transaction[]) => {
-    return items.reduce((pre, item) => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+    refetch,
+  } = useTransactions(filters);
+
+  const processedData = useMemo(() => {
+    if (!data) return [];
+
+    // 平铺所有页的数据
+    const allTransactions = data.pages.flatMap((page) => page.items);
+
+    // 分组逻辑
+    const groupMap = allTransactions.reduce((pre, item) => {
       const date = new Date(item.transactionTime);
       const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-
-      if (!pre.has(monthKey)) {
-        pre.set(monthKey, []);
-      }
+      if (!pre.has(monthKey)) pre.set(monthKey, []);
       pre.get(monthKey)?.push(item);
       return pre;
     }, new Map<string, Transaction[]>());
-  };
 
-  // Effect for filter changes - reset everything
-  useEffect(() => {
-    setData([]);
-    setPage(1);
-    setHasMore(true);
-    // setIsInitialLoading(true);
-    loadMore(true);
-  }, [currentDate, filterType]);
-
-  const loadMore = async (isReset = false) => {
-    if (loadingRef.current) return;
-    loadingRef.current = true;
-
-    const currentPage = isReset ? 1 : page;
-
-    try {
-      setIsInitialLoading(true);
-      const params: any = {
-        page: currentPage,
-        limit: 15,
-        type: filterType,
-      };
-
-      if (currentDate) {
-        params.startDate = currentDate.toISOString();
-        params.endDate = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth() + 1,
+    return [...groupMap.entries()]
+      .map(([month, transactions]) => ({
+        month,
+        totalIncome: transactions.reduce(
+          (acc, t) =>
+            acc + (t.transactionType === "income" ? Number(t.amount) : 0),
           0,
-          23,
-          59,
-          59,
-        ).toISOString();
-      }
+        ),
+        totalExpense: transactions.reduce(
+          (acc, t) =>
+            acc + (t.transactionType === "expense" ? Number(t.amount) : 0),
+          0,
+        ),
+        transactions,
+      }))
+      .sort((a, b) => b.month.localeCompare(a.month));
+  }, [data]);
 
-      const response = await transactionService.findAll(params);
-
-      if (response.items.length > 0) {
-        setData((prev) => {
-          const oldItems = isReset
-            ? []
-            : prev.map((p) => p.transactions).flat();
-          const allItems = [...oldItems, ...response.items];
-          const uniqueItems = Array.from(
-            new Map(allItems.map((item) => [item.id, item])).values(),
-          );
-
-          const groups = buildGroups(uniqueItems);
-          return [...groups.entries()]
-            .map(([month, transactions]) => ({
-              month,
-              totalIncome: transactions.reduce(
-                (acc: number, t: Transaction) =>
-                  acc + (t.transactionType === "income" ? Number(t.amount) : 0),
-                0,
-              ),
-              totalExpense: transactions.reduce(
-                (acc: number, t: Transaction) =>
-                  acc +
-                  (t.transactionType === "expense" ? Number(t.amount) : 0),
-                0,
-              ),
-              transactions,
-            }))
-            .sort((a, b) => b.month.localeCompare(a.month));
-        });
-
-        setTotals({
-          income: response.totalIncome || 0,
-          expense: response.totalExpense || 0,
-        });
-
-        setPage(currentPage + 1);
-        setHasMore(currentPage < response.totalPages);
-      } else {
-        if (isReset) setData([]);
-        setHasMore(false);
-      }
-    } catch (e) {
-      console.error(e);
-      setHasMore(false);
-    } finally {
-      loadingRef.current = false;
-      setIsInitialLoading(false);
-    }
-  };
+  const totals = useMemo(() => {
+    if (!data?.pages[0]) return { income: 0, expense: 0 };
+    // 后端返回的最后一次统计数据（通常后端第一页返回总计）
+    const firstPage = data.pages[0];
+    return {
+      income: firstPage.totalIncome || 0,
+      expense: firstPage.totalExpense || 0,
+    };
+  }, [data]);
 
   const handleRefresh = async () => {
-    setCurrentDate(currentDate); // Re-trigger initial load logic
+    await refetch();
   };
 
   const handleFilterChange = (year: number, month: number) => {
@@ -156,10 +116,10 @@ export default function Home() {
       <PullToRefresh onRefresh={handleRefresh}>
         <div className="min-h-[calc(100vh-140px)]">
           <AnimatePresence mode="wait">
-            {isInitialLoading && data.length === 0 ? (
+            {isLoading && processedData.length === 0 ? (
               <motion.div
                 key="loading"
-                initial={{ opacity: 0 }}
+                initial={{ opacity: 1 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 className="flex flex-col items-center justify-center py-20"
@@ -169,7 +129,7 @@ export default function Home() {
                   正在加载交易记录...
                 </span>
               </motion.div>
-            ) : data.length === 0 ? (
+            ) : processedData.length === 0 ? (
               <motion.div
                 key="empty"
                 initial={{ opacity: 0, y: 10 }}
@@ -200,9 +160,10 @@ export default function Home() {
                 animate={{ opacity: 1 }}
               >
                 <TransactionList
-                  groups={data}
-                  hasMore={hasMore}
-                  loadMore={() => loadMore(false)}
+                  groups={processedData}
+                  isLoading={isLoading}
+                  hasMore={!!hasNextPage}
+                  loadMore={fetchNextPage}
                 />
               </motion.div>
             )}

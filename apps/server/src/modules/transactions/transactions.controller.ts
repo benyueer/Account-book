@@ -82,7 +82,7 @@ export class TransactionsController {
     }
 
     return this.service.findAll(
-      req.user.userId,
+      req.user.userId as string,
       { page, limit },
       filters,
     )
@@ -97,7 +97,7 @@ export class TransactionsController {
     @Body() createTransactionDto: CreateTransactionDto,
     @Request() req: RequestWithUser,
   ) {
-    return this.service.create(createTransactionDto, req.user.userId)
+    return this.service.create(createTransactionDto, req.user.userId as string)
   }
 
   @Get(':id')
@@ -109,7 +109,7 @@ export class TransactionsController {
     @Param('id') id: string,
     @Request() req: RequestWithUser,
   ) {
-    return this.service.findOneById(id, req.user.userId)
+    return this.service.findOneById(id, req.user.userId as string)
   }
 
   @Patch(':id')
@@ -123,7 +123,7 @@ export class TransactionsController {
     @Body() updateTransactionDto: UpdateTransactionDto,
     @Request() req: RequestWithUser,
   ) {
-    return this.service.update(id, updateTransactionDto, req.user.userId)
+    return this.service.update(id, updateTransactionDto, req.user.userId as string)
   }
 
   @Delete(':id')
@@ -135,6 +135,6 @@ export class TransactionsController {
     @Param('id') id: string,
     @Request() req: RequestWithUser,
   ) {
-    return this.service.remove(id, req.user.userId)
+    return this.service.remove(id, req.user.userId as string)
   }
 }

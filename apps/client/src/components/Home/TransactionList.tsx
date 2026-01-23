@@ -6,7 +6,7 @@ interface TransactionListProps {
   groups: GroupedTransactions[];
   isLoading?: boolean;
   hasMore: boolean;
-  loadMore: () => Promise<void>;
+  loadMore: (options?: any) => Promise<any>;
 }
 
 export const TransactionList = ({

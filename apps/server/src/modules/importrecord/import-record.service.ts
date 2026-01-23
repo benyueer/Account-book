@@ -1,8 +1,8 @@
+import { ImportRecordStatus } from '@account-book/types'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { ImportRecord } from './entities/import-record.entity'
-import { ImportRecordStatus } from '@account-book/types'
 
 @Injectable()
 export class ImportRecordService {
@@ -51,7 +51,7 @@ export class ImportRecordService {
       })
     }, 3000)
 
-    await new Promise((resolve) => setTimeout(resolve, 3000))
+    await new Promise(resolve => setTimeout(resolve, 3000))
 
     return record
   }
