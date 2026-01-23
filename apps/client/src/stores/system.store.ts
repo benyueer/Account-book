@@ -6,7 +6,7 @@ interface SystemState {
   showTabBar: () => void
 }
 
-export const useSystemStore = create<SystemState>((set) => ({
+export const useSystemStore = create<SystemState>(set => ({
   tabBarVisible: true,
   hideTabBar: () => set({ tabBarVisible: false }),
   showTabBar: () => set({ tabBarVisible: true }),

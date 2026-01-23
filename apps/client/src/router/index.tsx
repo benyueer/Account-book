@@ -6,8 +6,7 @@ import Login from "../pages/Login";
 import Profile from "../pages/Profile";
 import Statistics from "../pages/Statistics";
 import Detail from "../pages/Detail";
-import KeepAlive from "react-activation";
-
+import ImportRecords from "../pages/ImportRecords";
 export const router = createBrowserRouter([
   {
     path: "/login",
@@ -21,8 +20,14 @@ export const router = createBrowserRouter([
         element: <Layout />,
         children: [
           {
-            index: true,
-            element: <KeepAlive id="main-route"><Home /></KeepAlive>,
+            path: "",
+            element: <Home />,
+            children: [
+              {
+                path: "detail/:id",
+                element: <Detail />,
+              },
+            ],
           },
           {
             path: "statistics",
@@ -31,10 +36,12 @@ export const router = createBrowserRouter([
           {
             path: "profile",
             element: <Profile />,
-          },
-          {
-            path: "detail/:id",
-            element: <Detail />,
+            children: [
+              {
+                path: "import-records",
+                element: <ImportRecords />,
+              },
+            ],
           },
         ],
       },

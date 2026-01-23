@@ -5,6 +5,7 @@ import { dataSourceOptions } from '../ormconfig'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './modules/auth/auth.module'
+import { ImportRecordModule } from './modules/importrecord/import-record.module'
 import { TransactionsModule } from './modules/transactions/transactions.module'
 import { UsersModule } from './modules/users/users.module'
 
@@ -18,6 +19,7 @@ import { UsersModule } from './modules/users/users.module'
     AuthModule,
     UsersModule,
     TransactionsModule,
+    ImportRecordModule,
   ],
   controllers: [AppController],
   providers: [AppService],

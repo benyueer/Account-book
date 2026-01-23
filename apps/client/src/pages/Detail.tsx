@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { NavBar, DotLoading, ErrorBlock, Card, List } from "antd-mobile";
+import { motion } from "framer-motion";
 import { transactionService } from "../api/transactions";
 import type { Transaction } from "@account-book/types";
 import { useSystemStore } from "../stores/system.store";
@@ -77,7 +78,7 @@ const Detail: React.FC = () => {
     }
 
     return (
-      <div className="p-4 space-y-4 h-full overflow-y-auto">
+      <div className="p-4 space-y-4">
         <div className="flex flex-col items-center py-6 bg-white rounded-2xl shadow-sm border border-slate-50">
           <span className="text-xs text-slate-400 mb-1">
             {transaction.transactionType === "income" ? "收入金额" : "支出金额"}
@@ -167,15 +168,21 @@ const Detail: React.FC = () => {
   };
 
   return (
-    <div className="h-screen bg-slate-50">
+    <motion.div
+      initial={{ opacity: 0, x: "100%" }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: "100%" }}
+      transition={{ type: "spring", damping: 25, stiffness: 200 }}
+      className="fixed inset-0 z-50 bg-slate-50 flex flex-col"
+    >
       <NavBar
         onBack={() => navigate(-1)}
-        className="bg-white border-b border-slate-100"
+        className="bg-white border-b border-slate-100 flex-shrink-0"
       >
         交易详情
       </NavBar>
-      {renderContent()}
-    </div>
+      <div className="flex-1 overflow-y-auto">{renderContent()}</div>
+    </motion.div>
   );
 };
 

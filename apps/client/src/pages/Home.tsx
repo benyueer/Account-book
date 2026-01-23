@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PullToRefresh, Empty, DotLoading } from "antd-mobile";
+import { Outlet } from "react-router-dom";
 import { FilterBar } from "../components/Home/FilterBar";
 import { TransactionList } from "../components/Home/TransactionList";
 import { transactionService } from "../api/transactions";
@@ -35,8 +36,7 @@ export default function Home() {
     setData([]);
     setPage(1);
     setHasMore(true);
-    setIsInitialLoading(true);
-    // The loadMore will be triggered by scroll or manually here if empty
+    // setIsInitialLoading(true);
     loadMore(true);
   }, [currentDate, filterType]);
 
@@ -47,6 +47,7 @@ export default function Home() {
     const currentPage = isReset ? 1 : page;
 
     try {
+      setIsInitialLoading(true);
       const params: any = {
         page: currentPage,
         limit: 15,
@@ -208,6 +209,7 @@ export default function Home() {
           </AnimatePresence>
         </div>
       </PullToRefresh>
+      <Outlet />
     </motion.div>
   );
 }

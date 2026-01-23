@@ -12,6 +12,12 @@ export enum TransactionType {
   NO_COUNT = 'noCount',
 }
 
+export enum ImportRecordStatus {
+  PENDING = 'pending',
+  SUCCESS = 'success',
+  FAILED = 'failed',
+}
+
 export interface Transaction {
   id: string
   transactionTime: string | Date // ISO Date string or Date object
@@ -44,5 +50,27 @@ export interface GroupedTransactions {
 export type CreateTransactionDto = Omit<Transaction, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'deleteAt' | 'icon' | 'currency'>
 
 export type UpdateTransactionDto = Partial<CreateTransactionDto>
+
+export interface ImportRecord {
+  id: string
+  fileName: string
+  fileType: string
+  status: ImportRecordStatus
+  totalCount: number
+  successCount: number
+  failCount: number
+  errorMessage?: string
+  importTime: string | Date
+  createdAt: string | Date
+  userId: string
+}
+
+export interface ImportRecordResponse {
+  items: ImportRecord[]
+  total: number
+  page: number
+  limit: number
+  totalPages: number
+}
 
 export * from './server/index.js'

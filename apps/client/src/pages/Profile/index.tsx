@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
+import { Outlet, useNavigate } from "react-router-dom";
 
 export default function Profile() {
+  const navigate = useNavigate();
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -25,9 +27,15 @@ export default function Profile() {
 
       <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
         <MenuItem icon="📊" text="月度报告" />
+        <MenuItem
+          icon="📥"
+          text="导入账单"
+          onClick={() => navigate("/profile/import-records")}
+        />
         <MenuItem icon="⚙️" text="设置" />
         <MenuItem icon="❓" text="帮助与反馈" isLast />
       </div>
+      <Outlet />
     </motion.div>
   );
 }
@@ -36,14 +44,17 @@ function MenuItem({
   icon,
   text,
   isLast = false,
+  onClick,
 }: {
   icon: string;
   text: string;
   isLast?: boolean;
+  onClick?: () => void;
 }) {
   return (
     <motion.div
       whileTap={{ scale: 0.98 }}
+      onClick={onClick}
       className={`p-4 px-5 flex items-center justify-between cursor-pointer active:bg-slate-50 ${
         !isLast ? "border-b border-slate-100" : ""
       }`}

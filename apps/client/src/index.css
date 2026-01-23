@@ -29,9 +29,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
   /* overflow-y: auto; */
   overflow: hidden;
-  overscroll-behavior-y: none;
+  overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
-  /* 禁用下拉刷新等回弹效果，保持平滑 */
+  /* 禁用下拉刷新等回弹效果和左右滑动手势导航 */
 }
 
 img,

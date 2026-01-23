@@ -6,7 +6,6 @@ import { router } from "./router/index.tsx";
 import "./index.css";
 
 import "virtual:uno.css";
-import { AliveScope } from "react-activation";
 
 const queryClient = new QueryClient();
 
@@ -24,8 +23,6 @@ const root = createRoot(container!);
 
 root.render(
   <QueryClientProvider client={queryClient}>
-    <AliveScope>
-      <RouterProvider router={router} />
-    </AliveScope>
+    <RouterProvider router={router} />
   </QueryClientProvider>,
 );
