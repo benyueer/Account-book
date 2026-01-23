@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, LayoutGroup } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSystemStore } from "../../stores/system.store";
 
@@ -14,14 +14,18 @@ export const TabBar = () => {
   const { tabBarVisible } = useSystemStore();
 
   return (
-    <AnimatePresence>
-      {tabBarVisible && (
+    <LayoutGroup id="sidebar-layout">
+      {/* 居中定位容器：负责 fixed 定位和水平居中 */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[400px] z-100 flex justify-center">
+        {/* 动画容器：负责 y 轴位移和透明度 */}
         <motion.div
-          initial={{ y: 100, x: "-50%", opacity: 0 }}
-          animate={{ y: 0, x: "-50%", opacity: 1 }}
-          exit={{ y: 100, x: "-50%", opacity: 0 }}
+          initial={{ y: 100, opacity: 0 }}
+          animate={{
+            y: tabBarVisible ? 0 : 100,
+            opacity: tabBarVisible ? 1 : 0,
+          }}
           transition={{ type: "spring", damping: 25, stiffness: 200 }}
-          className="fixed bottom-6 left-1/2 w-[90%] max-w-[400px] h-[64px] bg-white/25 backdrop-blur-xl rounded-2xl flex justify-around items-center px-2 shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] z-100 overflow-hidden border border-white/20 ring-1 ring-white/30"
+          className="w-full h-[64px] bg-white/25 backdrop-blur-xl rounded-2xl flex justify-around items-center px-2 shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] overflow-hidden border border-white/20 ring-1 ring-white/30"
         >
           {tabs.map((tab) => {
             const isActive = location.pathname === tab.path;
@@ -53,7 +57,7 @@ export const TabBar = () => {
             );
           })}
         </motion.div>
-      )}
-    </AnimatePresence>
+      </div>
+    </LayoutGroup>
   );
 };
