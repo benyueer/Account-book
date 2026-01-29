@@ -1,4 +1,4 @@
-import type { ImportRecordMetadata, Transaction } from '@account-book/types'
+import type { ImportRecordMetadata } from '@account-book/types'
 import { TransactionType } from '@account-book/types'
 import * as XLSX from 'xlsx'
 

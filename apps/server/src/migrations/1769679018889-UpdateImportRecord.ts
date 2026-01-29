@@ -1,76 +1,75 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import type { MigrationInterface, QueryRunner } from 'typeorm'
 
 export class UpdateImportRecord1769679018889 implements MigrationInterface {
-    name = 'UpdateImportRecord1769679018889'
+  name = 'UpdateImportRecord1769679018889'
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "transactions" ADD "importRecordId" uuid`);
-        await queryRunner.query(`COMMENT ON COLUMN "transactions"."importRecordId" IS '导入记录id'`);
-        await queryRunner.query(`ALTER TABLE "import_records" ADD "title" character varying`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."title" IS '账单标题'`);
-        await queryRunner.query(`ALTER TABLE "import_records" ADD "nickname" character varying`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."nickname" IS '用户昵称'`);
-        await queryRunner.query(`ALTER TABLE "import_records" ADD "start_time" TIMESTAMP`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."start_time" IS '账单开始时间'`);
-        await queryRunner.query(`ALTER TABLE "import_records" ADD "end_time" TIMESTAMP`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."end_time" IS '账单结束时间'`);
-        await queryRunner.query(`ALTER TABLE "import_records" ADD "export_time" TIMESTAMP`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."export_time" IS '账单导出时间'`);
-        await queryRunner.query(`ALTER TABLE "import_records" ADD "total_income_cost" numeric(12,2) NOT NULL DEFAULT '0'`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_income_cost" IS '总收入'`);
-        await queryRunner.query(`ALTER TABLE "import_records" ADD "total_income_count" integer NOT NULL DEFAULT '0'`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_income_count" IS '收入笔数'`);
-        await queryRunner.query(`ALTER TABLE "import_records" ADD "total_expense_cost" numeric(12,2) NOT NULL DEFAULT '0'`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_expense_cost" IS '总支出'`);
-        await queryRunner.query(`ALTER TABLE "import_records" ADD "total_expense_count" integer NOT NULL DEFAULT '0'`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_expense_count" IS '支出笔数'`);
-        await queryRunner.query(`ALTER TABLE "import_records" ADD "bill_notes" text`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."bill_notes" IS '账单备注/注意事项'`);
-        await queryRunner.query(`COMMENT ON COLUMN "transactions"."userId" IS '用户id'`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."file_name" IS '文件名'`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."file_type" IS '文件类型'`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_count" IS '总数'`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."success_count" IS '成功数'`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."fail_count" IS '失败数'`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."error_message" IS '错误信息'`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."import_time" IS '导入时间'`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."created_at" IS '创建时间'`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."user_id" IS '用户id'`);
-    }
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`ALTER TABLE "transactions" ADD "importRecordId" uuid`)
+    await queryRunner.query(`COMMENT ON COLUMN "transactions"."importRecordId" IS '导入记录id'`)
+    await queryRunner.query(`ALTER TABLE "import_records" ADD "title" character varying`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."title" IS '账单标题'`)
+    await queryRunner.query(`ALTER TABLE "import_records" ADD "nickname" character varying`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."nickname" IS '用户昵称'`)
+    await queryRunner.query(`ALTER TABLE "import_records" ADD "start_time" TIMESTAMP`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."start_time" IS '账单开始时间'`)
+    await queryRunner.query(`ALTER TABLE "import_records" ADD "end_time" TIMESTAMP`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."end_time" IS '账单结束时间'`)
+    await queryRunner.query(`ALTER TABLE "import_records" ADD "export_time" TIMESTAMP`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."export_time" IS '账单导出时间'`)
+    await queryRunner.query(`ALTER TABLE "import_records" ADD "total_income_cost" numeric(12,2) NOT NULL DEFAULT '0'`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_income_cost" IS '总收入'`)
+    await queryRunner.query(`ALTER TABLE "import_records" ADD "total_income_count" integer NOT NULL DEFAULT '0'`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_income_count" IS '收入笔数'`)
+    await queryRunner.query(`ALTER TABLE "import_records" ADD "total_expense_cost" numeric(12,2) NOT NULL DEFAULT '0'`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_expense_cost" IS '总支出'`)
+    await queryRunner.query(`ALTER TABLE "import_records" ADD "total_expense_count" integer NOT NULL DEFAULT '0'`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_expense_count" IS '支出笔数'`)
+    await queryRunner.query(`ALTER TABLE "import_records" ADD "bill_notes" text`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."bill_notes" IS '账单备注/注意事项'`)
+    await queryRunner.query(`COMMENT ON COLUMN "transactions"."userId" IS '用户id'`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."file_name" IS '文件名'`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."file_type" IS '文件类型'`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_count" IS '总数'`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."success_count" IS '成功数'`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."fail_count" IS '失败数'`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."error_message" IS '错误信息'`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."import_time" IS '导入时间'`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."created_at" IS '创建时间'`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."user_id" IS '用户id'`)
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."user_id" IS NULL`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."created_at" IS NULL`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."import_time" IS NULL`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."error_message" IS NULL`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."fail_count" IS NULL`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."success_count" IS NULL`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_count" IS NULL`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."file_type" IS NULL`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."file_name" IS NULL`);
-        await queryRunner.query(`COMMENT ON COLUMN "transactions"."userId" IS NULL`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."bill_notes" IS '账单备注/注意事项'`);
-        await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "bill_notes"`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_expense_count" IS '支出笔数'`);
-        await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "total_expense_count"`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_expense_cost" IS '总支出'`);
-        await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "total_expense_cost"`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_income_count" IS '收入笔数'`);
-        await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "total_income_count"`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_income_cost" IS '总收入'`);
-        await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "total_income_cost"`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."export_time" IS '账单导出时间'`);
-        await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "export_time"`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."end_time" IS '账单结束时间'`);
-        await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "end_time"`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."start_time" IS '账单开始时间'`);
-        await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "start_time"`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."nickname" IS '用户昵称'`);
-        await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "nickname"`);
-        await queryRunner.query(`COMMENT ON COLUMN "import_records"."title" IS '账单标题'`);
-        await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "title"`);
-        await queryRunner.query(`COMMENT ON COLUMN "transactions"."importRecordId" IS '导入记录id'`);
-        await queryRunner.query(`ALTER TABLE "transactions" DROP COLUMN "importRecordId"`);
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."user_id" IS NULL`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."created_at" IS NULL`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."import_time" IS NULL`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."error_message" IS NULL`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."fail_count" IS NULL`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."success_count" IS NULL`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_count" IS NULL`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."file_type" IS NULL`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."file_name" IS NULL`)
+    await queryRunner.query(`COMMENT ON COLUMN "transactions"."userId" IS NULL`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."bill_notes" IS '账单备注/注意事项'`)
+    await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "bill_notes"`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_expense_count" IS '支出笔数'`)
+    await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "total_expense_count"`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_expense_cost" IS '总支出'`)
+    await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "total_expense_cost"`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_income_count" IS '收入笔数'`)
+    await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "total_income_count"`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."total_income_cost" IS '总收入'`)
+    await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "total_income_cost"`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."export_time" IS '账单导出时间'`)
+    await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "export_time"`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."end_time" IS '账单结束时间'`)
+    await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "end_time"`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."start_time" IS '账单开始时间'`)
+    await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "start_time"`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."nickname" IS '用户昵称'`)
+    await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "nickname"`)
+    await queryRunner.query(`COMMENT ON COLUMN "import_records"."title" IS '账单标题'`)
+    await queryRunner.query(`ALTER TABLE "import_records" DROP COLUMN "title"`)
+    await queryRunner.query(`COMMENT ON COLUMN "transactions"."importRecordId" IS '导入记录id'`)
+    await queryRunner.query(`ALTER TABLE "transactions" DROP COLUMN "importRecordId"`)
+  }
 }

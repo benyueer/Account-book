@@ -26,11 +26,11 @@ describe('billParser', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-      ; (XLSX.readFile as jest.Mock).mockReturnValue({
-        SheetNames: ['Sheet1'],
-        Sheets: { Sheet1: {} },
-      })
-      ; (XLSX.utils.sheet_to_json as jest.Mock).mockReturnValue(mockRows)
+    ; (XLSX.readFile as jest.Mock).mockReturnValue({
+      SheetNames: ['Sheet1'],
+      Sheets: { Sheet1: {} },
+    })
+    ; (XLSX.utils.sheet_to_json as jest.Mock).mockReturnValue(mockRows)
   })
 
   it('应该正确解析微信支付账单的元数据', () => {
