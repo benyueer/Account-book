@@ -24,6 +24,8 @@ export interface Transaction {
   // Frontend specific (might need to be separated later or kept optional)
   icon?: string
   currency?: string
+
+  importRecordId?: string
 }
 
 export interface GroupedTransactions {

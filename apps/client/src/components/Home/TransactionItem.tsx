@@ -23,7 +23,9 @@ export function TransactionItem({ transaction }: TransactionItemProps) {
     return ''
   }
 
-  const timeString = new Date(transactionTime).toLocaleTimeString('en-US', {
+  const timeString = new Date(transactionTime).toLocaleTimeString('zh-CN', {
+    month: '2-digit',
+    day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
     hour12: false,

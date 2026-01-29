@@ -1,6 +1,8 @@
 import { ImportRecordStatus } from '@account-book/types'
+import { InjectQueue } from '@nestjs/bullmq'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { Queue } from 'bullmq'
 import { Repository } from 'typeorm'
 import { ImportRecord } from './entities/import-record.entity'
 
@@ -9,6 +11,8 @@ export class ImportRecordService {
   constructor(
     @InjectRepository(ImportRecord)
     private importRecordRepository: Repository<ImportRecord>,
+    @InjectQueue('import-record')
+    private importRecordQueue: Queue,
   ) { }
 
   async findAll(userId: string, page = 1, limit = 10) {
@@ -38,20 +42,19 @@ export class ImportRecordService {
     return this.importRecordRepository.save(record)
   }
 
-  async uploadSimulated(userId: string, fileName: string, fileType: string) {
+  async upload(userId: string, fileName: string, fileType: string, filePath: string) {
     const record = await this.create(userId, fileName, fileType)
 
-    // 延迟 3s 模拟处理过程
-    setTimeout(async () => {
-      await this.importRecordRepository.update(record.id, {
-        status: ImportRecordStatus.SUCCESS,
-        importTime: new Date(),
-        totalCount: 100,
-        successCount: 100,
-      })
-    }, 3000)
+    // 将任务加入队列，包含文件路径
+    const job = await this.importRecordQueue.add('process-import', {
+      recordId: record.id,
+      userId,
+      fileName,
+      fileType,
+      filePath,
+    })
 
-    await new Promise(resolve => setTimeout(resolve, 3000))
+    console.log(`[Queue Added] JobId: ${job.id} for RecordId: ${record.id}`)
 
     return record
   }

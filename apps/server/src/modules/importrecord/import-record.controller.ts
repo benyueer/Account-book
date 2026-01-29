@@ -1,4 +1,6 @@
-import type { RequestWithUser } from '@account-book/types'
+import { Buffer } from 'node:buffer'
+import { extname } from 'node:path'
+import { RequestWithUser } from '@account-book/types'
 import {
   Controller,
   DefaultValuePipe,
@@ -12,7 +14,16 @@ import {
   UseInterceptors,
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger'
+import { diskStorage } from 'multer'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 import { ImportRecordService } from './import-record.service'
 
@@ -38,17 +49,43 @@ export class ImportRecordController {
 
   @Post('upload')
   @ApiOperation({ summary: '上传账单文件' })
-  @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: '账单文件(csv/xlsx)',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('file', {
+    storage: diskStorage({
+      destination: './uploads',
+      filename: (req, file, cb) => {
+        const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`
+        cb(null, `${file.fieldname}-${uniqueSuffix}${extname(file.originalname)}`)
+      },
+    }),
+  }))
   @ApiResponse({ status: 201, description: '上传成功，后台处理中' })
   async upload(
     @Request() req: RequestWithUser,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    // 这里使用模拟逻辑，不保存真实文件
-    return this.service.uploadSimulated(
+    // 解决 multer 中文文件名乱码问题 (latin1 -> utf8)
+    const originalName = file?.originalname
+      ? Buffer.from(file.originalname, 'latin1').toString('utf8')
+      : 'unknown'
+
+    return this.service.upload(
       req.user.userId,
-      file?.originalname || 'unknown',
+      originalName,
       file?.mimetype || 'application/octet-stream',
+      file?.path,
     )
   }
 }

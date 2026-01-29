@@ -1,5 +1,6 @@
+import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { dataSourceOptions } from '../ormconfig'
 import { AppController } from './app.controller'
@@ -16,6 +17,15 @@ import { UsersModule } from './modules/users/users.module'
       envFilePath: '.env',
     }),
     TypeOrmModule.forRoot(dataSourceOptions),
+    BullModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        connection: {
+          host: configService.get('REDIS_HOST', 'localhost'),
+          port: configService.get('REDIS_PORT', 6379),
+        },
+      }),
+    }),
     AuthModule,
     UsersModule,
     TransactionsModule,

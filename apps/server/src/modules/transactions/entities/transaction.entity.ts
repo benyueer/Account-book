@@ -84,7 +84,12 @@ export class Transaction implements TransactionInterface {
   @Column({ name: 'deleteAt', nullable: true, comment: '删除时间' })
   deleteAt: Date
 
-  @Column({ name: 'userId', type: 'uuid' })
+  @Column({ name: 'userId', type: 'uuid', comment: '用户id' })
   @IsUUID()
   userId: string
+
+  @Column({ name: 'importRecordId', type: 'uuid', nullable: true, comment: '导入记录id' })
+  @IsUUID()
+  @IsOptional()
+  importRecordId: string
 }

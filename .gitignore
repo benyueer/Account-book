@@ -36,3 +36,6 @@ coverage
 */.DS_Store
 
 dev-dist
+
+test_file
+uploads

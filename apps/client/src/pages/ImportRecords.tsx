@@ -131,7 +131,7 @@ export default function ImportRecords() {
             type="file"
             ref={fileInputRef}
             onChange={onFileChange}
-            accept=".csv,.xml"
+            accept=".csv,.xlsx"
             style={{ display: 'none' }}
           />
           <Button

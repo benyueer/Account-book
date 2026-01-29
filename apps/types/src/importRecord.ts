@@ -4,7 +4,20 @@ export enum ImportRecordStatus {
   FAILED = 'failed',
 }
 
-export interface ImportRecord {
+export interface ImportRecordMetadata {
+  title?: string
+  nickname?: string
+  startTime?: string | Date
+  endTime?: string | Date
+  exportTime?: string | Date
+  totalIncomeCount?: number
+  totalIncomeCost?: number
+  totalExpenseCount?: number
+  totalExpenseCost?: number
+  billNotes?: string
+}
+
+export interface ImportRecord extends ImportRecordMetadata {
   id: string
   fileName: string
   fileType: string
@@ -16,6 +29,18 @@ export interface ImportRecord {
   importTime: string | Date
   createdAt: string | Date
   userId: string
+
+  // // 元数据信息
+  // title?: string
+  // nickname?: string
+  // startTime?: string | Date
+  // endTime?: string | Date
+  // exportTime?: string | Date
+  // totalIncomeCount?: number
+  // totalIncomeCost?: number
+  // totalExpenseCount?: number
+  // totalExpenseCost?: number
+  // billNotes?: string
 }
 
 export interface ImportRecordResponse {
