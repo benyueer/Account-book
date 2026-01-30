@@ -29,7 +29,7 @@ export interface Transaction {
 }
 
 export interface GroupedTransactions {
-  month: string
+  date: string
   totalIncome: number
   totalExpense: number
   transactions: Transaction[]
