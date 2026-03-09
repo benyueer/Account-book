@@ -38,3 +38,4 @@ export interface GroupedTransactions {
 export type CreateTransactionDto = Omit<Transaction, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'deleteAt' | 'icon' | 'currency'>
 
 export type UpdateTransactionDto = Partial<CreateTransactionDto>
+export type ParsedTransaction = Omit<Transaction, 'id' | 'userId'>

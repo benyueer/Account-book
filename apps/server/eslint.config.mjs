@@ -22,6 +22,8 @@ export default antfu({
     'ts/no-unsafe-member-access': 'off',
     'ts/no-unsafe-assignment': 'off',
     'ts/no-unsafe-call': 'off',
+    '@typescript-eslint/no-unsafe-return': 'off',
+    '@typescript-eslint/no-unsafe-argument': 'off',
   },
 }, {
   languageOptions: {

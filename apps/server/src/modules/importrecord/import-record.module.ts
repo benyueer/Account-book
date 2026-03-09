@@ -1,6 +1,7 @@
 import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { CardsModule } from '../cards/cards.module'
 import { Transaction } from '../transactions/entities/transaction.entity'
 import { ImportRecord } from './entities/import-record.entity'
 import { ImportRecordController } from './import-record.controller'
@@ -13,6 +14,7 @@ import { ImportRecordService } from './import-record.service'
     BullModule.registerQueue({
       name: 'import-record',
     }),
+    CardsModule,
   ],
   controllers: [ImportRecordController],
   providers: [ImportRecordService, ImportRecordProcessor],

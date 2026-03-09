@@ -4,6 +4,7 @@ import { Layout } from '../components/Layout'
 import Detail from '../pages/Detail'
 import Home from '../pages/Home'
 import ImportRecords from '../pages/ImportRecords'
+import Cards from '../pages/Cards'
 import Login from '../pages/Login'
 import Profile from '../pages/Profile'
 import Statistics from '../pages/Statistics'
@@ -41,6 +42,10 @@ export const router = createBrowserRouter([
               {
                 path: 'import-records',
                 element: <ImportRecords />,
+              },
+              {
+                path: 'cards',
+                element: <Cards />,
               },
             ],
           },

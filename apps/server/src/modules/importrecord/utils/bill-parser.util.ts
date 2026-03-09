@@ -1,11 +1,9 @@
-import type { ImportRecordMetadata } from '@account-book/types'
+import type { ImportRecordMetadata, ParsedBill, ParsedTransaction } from '@account-book/types'
 import { TransactionType } from '@account-book/types'
 import * as XLSX from 'xlsx'
 
-export interface ParsedBill {
-  metadata: ImportRecordMetadata
-  transactions: any[]
-}
+type ExcelCellValue = string | number | Date | boolean | null | undefined
+type ExcelRow = ExcelCellValue[]
 
 export class BillParser {
   static parse(filePath: string): ParsedBill {
@@ -14,15 +12,15 @@ export class BillParser {
     const worksheet = workbook.Sheets[sheetName]
 
     // 将工作表转换为原始数组（矩阵）
-    const rows = XLSX.utils.sheet_to_json<any[]>(worksheet, { header: 1 })
+    const rows = XLSX.utils.sheet_to_json<ExcelRow>(worksheet, { header: 1 })
 
     const result: ParsedBill = {
-      metadata: {},
+      metadata: {} as ImportRecordMetadata,
       transactions: [],
     }
 
     let tableStartIndex = -1
-    const metadataRows: any[] = []
+    const metadataRows: ExcelRow[] = []
 
     // 1. 扫描元数据和定位表头
     for (let i = 0; i < rows.length; i++) {
@@ -58,7 +56,7 @@ export class BillParser {
     return result
   }
 
-  private static extractMetadata(rows: any[], metadata: any) {
+  private static extractMetadata(rows: ExcelRow[], metadata: ImportRecordMetadata) {
     for (const row of rows) {
       const line = row.join(' ')
       if (line.includes('微信支付账单明细')) {
@@ -73,54 +71,54 @@ export class BillParser {
       if (line.includes('起始时间：')) {
         const match = line.match(/起始时间：\[(.*?)\]\s+终止时间：\[(.*?)\]/)
         if (match?.[1] && match?.[2]) {
-          metadata.startTime = new Date(match[1] as string)
-          metadata.endTime = new Date(match[2] as string)
+          metadata.startTime = new Date(match[1])
+          metadata.endTime = new Date(match[2])
         }
       }
       if (line.includes('导出时间：')) {
         const match = line.match(/导出时间：\[(.*?)\]/)
         if (match?.[1]) {
-          metadata.exportTime = new Date(match[1] as string)
+          metadata.exportTime = new Date(match[1])
         }
       }
       if (line.includes('收入')) {
         const incMatch = line.match(/(\d+)笔\s+(\d+(?:\.\d+)?)元$/)
-        if (incMatch?.length >= 3) {
-          metadata.totalIncomeCount = incMatch[1]
+        if (incMatch && incMatch.length >= 3) {
+          metadata.totalIncomeCount = Number.parseInt(incMatch[1])
           // 金额
-          metadata.totalIncomeCost = incMatch[2]
+          metadata.totalIncomeCost = Number.parseFloat(incMatch[2])
         }
       }
       if (line.includes('支出')) {
         const expMatch = line.match(/(\d+)笔\s+(\d+(?:\.\d+)?)元$/)
-        if (expMatch?.length >= 3) {
-          metadata.totalExpenseCount = expMatch[1]
-          metadata.totalExpenseCost = expMatch[2]
+        if (expMatch && expMatch.length >= 3) {
+          metadata.totalExpenseCount = Number.parseInt(expMatch[1])
+          metadata.totalExpenseCost = Number.parseFloat(expMatch[2])
         }
       }
     }
   }
 
-  private static rowToTransaction(row: any[], headers: string[]) {
-    const data: any = {}
+  private static rowToTransaction(row: ExcelRow, headers: string[]): ParsedTransaction {
+    const data: Record<string, ExcelCellValue> = {}
     headers.forEach((header, index) => {
       data[header] = row[index]
     })
 
     // 微信支付字段映射
     return {
-      transactionTime: new Date(String(data['交易时间'] || data['时间'])),
-      transactionCategory: data['交易类型'] || data['类型'],
-      counterparty: data['交易对方'],
-      counterpartyAccount: data['对方账号'],
-      productDescription: data['商品'],
+      transactionTime: new Date(String(data['交易时间'] || data['时间'] || '')),
+      transactionCategory: String(data['交易类型'] || data['类型'] || ''),
+      counterparty: String(data['交易对方'] || ''),
+      counterpartyAccount: String(data['对方账号'] || ''),
+      productDescription: String(data['商品'] || ''),
       amount: Math.abs(Number.parseFloat(String(data['金额(元)'] || data['金额'] || '0').replace(/[^\d.-]/g, ''))),
       transactionType: (data['收/支'] === '收入') ? TransactionType.INCOME : TransactionType.EXPENSE,
-      paymentMethod: data['支付方式'],
-      transactionStatus: data['当前状态'],
+      paymentMethod: String(data['支付方式'] || ''),
+      transactionStatus: String(data['当前状态'] || ''),
       transactionOrderNumber: String(data['交易单号'] || ''),
       merchantOrderNumber: String(data['商户单号'] || ''),
-      notes: data['备注'] as string,
+      notes: data['备注'] ? String(data['备注']) : undefined,
     }
   }
 }

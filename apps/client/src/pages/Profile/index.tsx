@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion'
 import { Outlet, useNavigate } from 'react-router-dom'
+import { useAuthStore } from '../../stores/auth.store.ts'
 
 export default function Profile() {
   const navigate = useNavigate()
+  const user = useAuthStore(state => state.user)
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -20,13 +22,13 @@ export default function Profile() {
           用
         </div>
         <div className="flex-1">
-          <h2 className="m-0 mb-1 text-lg text-slate-800 font-600">用户名</h2>
-          <p className="m-0 text-sm text-slate-500">user@example.com</p>
+          <h2 className="m-0 mb-1 text-lg text-slate-800 font-600">{user?.name}</h2>
         </div>
       </motion.div>
 
       <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
         <MenuItem icon="📊" text="月度报告" />
+        <MenuItem icon="💳" text="卡片管理" onClick={async () => navigate('/profile/cards')} />
         <MenuItem
           icon="📥"
           text="导入账单"

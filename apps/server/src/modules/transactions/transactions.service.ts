@@ -1,4 +1,4 @@
-import { TransactionType } from '@account-book/types'
+import { PaginatedResult, TransactionType } from '@account-book/types'
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Between, FindOptionsOrder, FindOptionsWhere, QueryFailedError, Repository } from 'typeorm'
@@ -40,7 +40,7 @@ export class TransactionsService {
     userId: string,
     pagination: PaginationDto,
     filters?: { startDate?: Date, endDate?: Date, type?: string },
-  ) {
+  ): Promise<PaginatedResult<Transaction> & { totalIncome: number, totalExpense: number }> {
     const { page = 1, limit = 10 } = pagination
     const skip = (page - 1) * limit
 

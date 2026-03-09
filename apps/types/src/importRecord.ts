@@ -1,3 +1,5 @@
+import type { ParsedTransaction } from './transaction.js'
+
 export enum ImportRecordStatus {
   PENDING = 'pending',
   SUCCESS = 'success',
@@ -17,6 +19,11 @@ export interface ImportRecordMetadata {
   billNotes?: string
 }
 
+export interface ParsedBill {
+  metadata: ImportRecordMetadata
+  transactions: ParsedTransaction[]
+}
+
 export interface ImportRecord extends ImportRecordMetadata {
   id: string
   fileName: string
@@ -29,18 +36,6 @@ export interface ImportRecord extends ImportRecordMetadata {
   importTime: string | Date
   createdAt: string | Date
   userId: string
-
-  // // 元数据信息
-  // title?: string
-  // nickname?: string
-  // startTime?: string | Date
-  // endTime?: string | Date
-  // exportTime?: string | Date
-  // totalIncomeCount?: number
-  // totalIncomeCost?: number
-  // totalExpenseCount?: number
-  // totalExpenseCost?: number
-  // billNotes?: string
 }
 
 export interface ImportRecordResponse {

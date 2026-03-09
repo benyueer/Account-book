@@ -38,7 +38,14 @@ export function TransactionItem({ transaction }: TransactionItemProps) {
     >
       <div className="flex items-center gap-3">
         <div className="h-10 w-10 flex items-center justify-center rounded-full bg-gray-100 text-xl text-gray-600">
-          <div className={icon} />
+          {
+            icon ? (
+              <div className={icon} />
+            ) : (
+              <div className={`w-full h-full rounded-full ${transactionType === TransactionType.INCOME ? 'bg-emerald-200' : 'bg-red-200'}`}>
+              </div>
+            )
+          }
         </div>
         <div className="flex flex-col">
           <span className="text-sm text-slate-900 font-medium">

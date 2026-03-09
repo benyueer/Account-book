@@ -26,6 +26,7 @@ export default antfu({
     'ts/no-unsafe-argument': 'off',
     'ts/strict-boolean-expressions': 'off',
     'ts/no-unsafe-member-access': 'off',
+    'ts/no-unsafe-return': 'off',
   },
   // 忽略文件
   ignores: [

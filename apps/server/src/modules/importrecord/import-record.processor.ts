@@ -1,11 +1,14 @@
+import type { Job } from 'bullmq'
+import type { Repository } from 'typeorm'
 import { unlink } from 'node:fs/promises'
 import { join } from 'node:path'
+import process from 'node:process'
 import { ImportRecordStatus } from '@account-book/types'
 import { Processor, WorkerHost } from '@nestjs/bullmq'
 import { Logger } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Job } from 'bullmq'
-import { In, Repository } from 'typeorm'
+import { In } from 'typeorm'
+import { CardsService } from '../cards/cards.service'
 import { Transaction } from '../transactions/entities/transaction.entity'
 import { ImportRecord } from './entities/import-record.entity'
 import { BillParser } from './utils/bill-parser.util'
@@ -18,6 +21,13 @@ interface ImportJobData {
   filePath: string
 }
 
+interface ImportJobResult {
+  success: boolean
+  recordId: string
+  successCount: number
+  failCount: number
+}
+
 @Processor('import-record')
 export class ImportRecordProcessor extends WorkerHost {
   private readonly logger = new Logger(ImportRecordProcessor.name)
@@ -27,11 +37,12 @@ export class ImportRecordProcessor extends WorkerHost {
     private importRecordRepository: Repository<ImportRecord>,
     @InjectRepository(Transaction)
     private transactionRepository: Repository<Transaction>,
+    private cardsService: CardsService,
   ) {
     super()
   }
 
-  async process(job: Job<ImportJobData, any, string>): Promise<any> {
+  async process(job: Job<ImportJobData, ImportJobResult, string>): Promise<ImportJobResult> {
     const { recordId, filePath, userId } = job.data
     this.logger.log(`[Task Received] Job: ${job.id}, recordId: ${recordId}, path: ${filePath}`)
 
@@ -46,7 +57,7 @@ export class ImportRecordProcessor extends WorkerHost {
       const parsedData = BillParser.parse(absolutePath)
 
       // 3. 查重并保存 Transaction
-      const orderNumbers = parsedData.transactions.map((t: any) => t.transactionOrderNumber).filter(Boolean) as string[]
+      const orderNumbers = parsedData.transactions.map(t => t.transactionOrderNumber).filter(Boolean) as string[]
 
       let existingOrderNumbers = new Set<string>()
       if (orderNumbers.length > 0) {
@@ -60,13 +71,27 @@ export class ImportRecordProcessor extends WorkerHost {
         existingOrderNumbers = new Set(existingTransactions.map(t => t.transactionOrderNumber))
       }
 
-      const newTransactions = parsedData.transactions
-        .filter((t: any): t is any => !!(t.transactionOrderNumber && !existingOrderNumbers.has(String(t.transactionOrderNumber))))
-        .map((t: any) => ({
+      const newTransactions: Transaction[] = []
+      for (const t of parsedData.transactions) {
+        if (!(t.transactionOrderNumber && !existingOrderNumbers.has(String(t.transactionOrderNumber)))) {
+          continue
+        }
+
+        let cardId: string | undefined
+        if (t.paymentMethod) {
+          const card = await this.cardsService.findOrCreateByPaymentMethod(t.paymentMethod, userId)
+          if (card) {
+            cardId = card.id
+          }
+        }
+
+        newTransactions.push({
           ...t,
           userId,
           importRecordId: recordId,
-        } as Transaction))
+          sourceCard: cardId || t.paymentMethod, // 有卡ID则存ID, 否则存原始文字
+        } as Transaction)
+      }
 
       if (newTransactions.length > 0) {
         await this.transactionRepository.save(newTransactions)

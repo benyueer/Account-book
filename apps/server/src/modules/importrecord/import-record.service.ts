@@ -1,4 +1,4 @@
-import { ImportRecordStatus } from '@account-book/types'
+import { ImportRecord as ImportRecordInterface, ImportRecordStatus, PaginatedResult } from '@account-book/types'
 import { InjectQueue } from '@nestjs/bullmq'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
@@ -15,7 +15,7 @@ export class ImportRecordService {
     private importRecordQueue: Queue,
   ) { }
 
-  async findAll(userId: string, page = 1, limit = 10) {
+  async findAll(userId: string, page = 1, limit = 10): Promise<PaginatedResult<ImportRecordInterface>> {
     const [items, total] = await this.importRecordRepository.findAndCount({
       where: { userId },
       order: { createdAt: 'DESC' },

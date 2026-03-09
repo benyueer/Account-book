@@ -6,6 +6,7 @@ import { dataSourceOptions } from '../ormconfig'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './modules/auth/auth.module'
+import { CardsModule } from './modules/cards/cards.module'
 import { ImportRecordModule } from './modules/importrecord/import-record.module'
 import { TransactionsModule } from './modules/transactions/transactions.module'
 import { UsersModule } from './modules/users/users.module'
@@ -30,6 +31,7 @@ import { UsersModule } from './modules/users/users.module'
     UsersModule,
     TransactionsModule,
     ImportRecordModule,
+    CardsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
