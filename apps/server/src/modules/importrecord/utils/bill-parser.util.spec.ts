@@ -39,9 +39,11 @@ describe('billParser', () => {
     expect(result.metadata.title).toBe('微信支付账单')
     expect(result.metadata.nickname).toBe('张三')
     expect(result.metadata.startTime).toBeInstanceOf(Date)
-    expect(result.metadata.totalIncome).toBe(100)
-    expect(result.metadata.totalExpense).toBe(50)
-    expect(result.metadata.notes).toContain('这是一些注意事项')
+    expect(result.metadata.totalIncomeCount).toBe(1)
+    expect(result.metadata.totalIncomeCost).toBe(100)
+    expect(result.metadata.totalExpenseCount).toBe(1)
+    expect(result.metadata.totalExpenseCost).toBe(50)
+    expect(result.metadata.billNotes).toContain('这是一些注意事项')
   })
 
   it('应该正确解析交易明细', () => {

@@ -105,7 +105,7 @@ export class TransactionsService {
   }
 
   async remove(id: string, userId: string): Promise<void> {
-    const result = await this.transactionRepository.delete({ id, userId } as any)
+    const result = await this.transactionRepository.delete({ id, userId })
     if (result.affected === 0) {
       throw new NotFoundException(`Transaction with ID "${id}" not found`)
     }

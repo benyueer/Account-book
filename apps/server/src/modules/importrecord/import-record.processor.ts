@@ -46,7 +46,7 @@ export class ImportRecordProcessor extends WorkerHost {
       const parsedData = BillParser.parse(absolutePath)
 
       // 3. 查重并保存 Transaction
-      const orderNumbers = parsedData.transactions.map(t => t.transactionOrderNumber).filter(Boolean) as string[]
+      const orderNumbers = parsedData.transactions.map((t: any) => t.transactionOrderNumber).filter(Boolean) as string[]
 
       let existingOrderNumbers = new Set<string>()
       if (orderNumbers.length > 0) {
