@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   postgres:
-    image: postgres:16-alpine
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/postgres:16-alpine
     container_name: account-book-postgres
     restart: unless-stopped
     environment:
@@ -20,7 +20,7 @@ services:
       timeout: 5s
       retries: 5
   redis:
-    image: redis:7-alpine
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/redis:7-alpine
     container_name: account-book-redis
     restart: unless-stopped
     ports:
