@@ -15,3 +15,7 @@ tasks:
       - dist
   lint:
     command: pnpm run lint
+  start:
+    command: pnpm run start:prod
+    deps:
+      - build
