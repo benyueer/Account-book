@@ -111,7 +111,7 @@ export default function Cards() {
                                   <img
                                     src={logoSrc}
                                     alt=""
-                                    className="w-6 h-6 object-contain"
+                                    className="w-10 h-10 object-contain"
                                   />
                                 ) : (
                                   <div className="i-mdi-bank text-xl" />
