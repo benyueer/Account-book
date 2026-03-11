@@ -5,6 +5,13 @@ import { useAuthStore } from '../../stores/auth.store.ts'
 export default function Profile() {
   const navigate = useNavigate()
   const user = useAuthStore(state => state.user)
+  const logout = useAuthStore(state => state.logout)
+
+  const handleLogout = () => {
+    logout()
+    navigate('/login', { replace: true })
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -37,6 +44,15 @@ export default function Profile() {
         <MenuItem icon="⚙️" text="设置" />
         <MenuItem icon="❓" text="帮助与反馈" isLast />
       </div>
+
+      <motion.div
+        whileTap={{ scale: 0.98 }}
+        onClick={handleLogout}
+        className="mt-6 flex cursor-pointer items-center justify-center rounded-2xl bg-white p-4 text-red-500 shadow-sm active:bg-red-50"
+      >
+        <span className="mr-2 text-xl">🚪</span>
+        <span className="text-base font-500">退出登录</span>
+      </motion.div>
       <Outlet />
     </motion.div>
   )
