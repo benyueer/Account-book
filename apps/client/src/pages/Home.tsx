@@ -8,24 +8,30 @@ import { TransactionList } from "../components/Home/TransactionList";
 import { useTransactions } from "../hooks/api/useTransactions";
 
 export default function Home() {
-  const [currentDate, setCurrentDate] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const [filterType, setFilterType] = useState<string | undefined>(undefined);
+  const [counterparty, setCounterparty] = useState<string | undefined>(undefined);
+  const [tagIds, setTagIds] = useState<string[]>([]);
+  const [minAmount, setMinAmount] = useState<number | undefined>(undefined);
+  const [maxAmount, setMaxAmount] = useState<number | undefined>(undefined);
 
   const filters = useMemo(() => {
-    const params: any = { type: filterType };
-    if (currentDate) {
-      params.startDate = currentDate.toISOString();
-      params.endDate = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth() + 1,
-        0,
-        23,
-        59,
-        59,
-      ).toISOString();
+    const params: any = { 
+      type: filterType,
+      counterparty,
+      tagIds: tagIds.length > 0 ? tagIds.join(',') : undefined,
+      minAmount,
+      maxAmount,
+    };
+    if (startDate) {
+      params.startDate = startDate.toISOString();
+    }
+    if (endDate) {
+      params.endDate = endDate.toISOString();
     }
     return params;
-  }, [currentDate, filterType]);
+  }, [startDate, endDate, filterType, counterparty, tagIds, minAmount, maxAmount]);
 
   const { data, fetchNextPage, hasNextPage, isLoading, refetch } =
     useTransactions(filters);
@@ -77,17 +83,18 @@ export default function Home() {
     await refetch();
   };
 
-  const handleFilterChange = (year: number, month: number) => {
-    setCurrentDate(new Date(year, month));
-  };
-
   const handleTypeChange = (type?: string) => {
     setFilterType(type);
   };
 
   const handleReset = () => {
-    setCurrentDate(null);
+    setStartDate(null);
+    setEndDate(null);
     setFilterType(undefined);
+    setCounterparty(undefined);
+    setTagIds([]);
+    setMinAmount(undefined);
+    setMaxAmount(undefined);
   };
 
   return (
@@ -98,11 +105,24 @@ export default function Home() {
       className="min-h-full bg-slate-50 text-slate-900"
     >
       <FilterBar
-        year={currentDate?.getFullYear()}
-        month={currentDate?.getMonth()}
+        startDate={startDate || undefined}
+        endDate={endDate || undefined}
         type={filterType}
-        onFilterChange={handleFilterChange}
+        counterparty={counterparty}
+        tagIds={tagIds}
+        minAmount={minAmount}
+        maxAmount={maxAmount}
+        onDateRangeChange={(start?: Date, end?: Date) => {
+          setStartDate(start || null);
+          setEndDate(end || null);
+        }}
         onTypeChange={handleTypeChange}
+        onCounterpartyChange={setCounterparty}
+        onTagsChange={setTagIds}
+        onAmountRangeChange={(min?: number, max?: number) => {
+          setMinAmount(min);
+          setMaxAmount(max);
+        }}
         onReset={handleReset}
         totalIncome={totals.income}
         totalExpense={totals.expense}

@@ -12,7 +12,15 @@ export interface PaginatedResponse<T> {
   totalExpense?: number
 }
 
-export function useTransactions(filters: { startDate?: string, endDate?: string, type?: string }) {
+export function useTransactions(filters: {
+  startDate?: string
+  endDate?: string
+  type?: string
+  counterparty?: string
+  tagIds?: string[]
+  minAmount?: number
+  maxAmount?: number
+}) {
   return useInfiniteQuery({
     queryKey: ['transactions', filters],
     queryFn: async ({ pageParam = 1 }) => {
@@ -70,6 +78,18 @@ export function useRemoveTransaction() {
     mutationFn: async (id: string) => apiClient.delete(`/v1/transactions/${id}`),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['transactions'] })
+    },
+  })
+}
+
+export function useUpdateTransactionTags() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ id, tagIds, applyToAllSameCounterparty }: { id: string, tagIds: string[], applyToAllSameCounterparty: boolean }) =>
+      apiClient.post<Transaction>(`/v1/transactions/${id}/tags`, { tagIds, applyToAllSameCounterparty }),
+    onSuccess: async (_, variables) => {
+      await queryClient.invalidateQueries({ queryKey: ['transactions'] })
+      await queryClient.invalidateQueries({ queryKey: ['transaction', variables.id] })
     },
   })
 }

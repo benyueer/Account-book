@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { CrudRequestInterceptor } from '@nestjsx/crud'
+import { TagsModule } from '../tags/tags.module'
 import { Transaction } from './entities/transaction.entity'
 import { TransactionsController } from './transactions.controller'
 import { TransactionsService } from './transactions.service'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Transaction])],
+  imports: [TypeOrmModule.forFeature([Transaction]), TagsModule],
   providers: [
     TransactionsService,
     {

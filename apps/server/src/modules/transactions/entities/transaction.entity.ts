@@ -1,6 +1,7 @@
 import { Transaction as TransactionInterface, TransactionType } from '@account-book/types'
 import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, IsUUID, Length, Min } from 'class-validator'
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Tag } from '../../tags/entities/tag.entity'
 
 @Entity('transactions')
 export class Transaction implements TransactionInterface {
@@ -53,13 +54,13 @@ export class Transaction implements TransactionInterface {
   @IsString()
   transactionStatus: string
 
-  @Column({ name: 'transactionOrderNumber', nullable: true, unique: true, comment: '交易订单号/交易单号' })
+  @Column({ name: 'transactionOrderNumber', nullable: true, comment: '交易订单号/交易单号' })
   @IsOptional()
   @IsString()
   @Length(1, 100)
   transactionOrderNumber: string
 
-  @Column({ name: 'merchantOrderNumber', nullable: true, unique: true, comment: '商家订单号/商户单号' })
+  @Column({ name: 'merchantOrderNumber', nullable: true, comment: '商家订单号/商户单号' })
   @IsOptional()
   @IsString()
   @Length(1, 100)
@@ -92,4 +93,12 @@ export class Transaction implements TransactionInterface {
   @IsUUID()
   @IsOptional()
   importRecordId: string
+
+  @ManyToMany(() => Tag)
+  @JoinTable({
+    name: 'transaction_tags',
+    joinColumn: { name: 'transactionId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'tagId', referencedColumnName: 'id' },
+  })
+  tags: Tag[]
 }

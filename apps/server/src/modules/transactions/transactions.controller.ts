@@ -8,6 +8,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseArrayPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -48,6 +49,10 @@ export class TransactionsController {
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
     @Query('type') type?: string,
+    @Query('counterparty') counterparty?: string,
+    @Query('tagIds', new ParseArrayPipe({ items: String, separator: ',', optional: true })) tagIds?: string[],
+    @Query('minAmount') minAmount?: number,
+    @Query('maxAmount') maxAmount?: number,
   ) {
     if (page < 1) {
       throw new BadRequestException('页码必须大于0')
@@ -56,7 +61,15 @@ export class TransactionsController {
       throw new BadRequestException('每页数量必须在1-100之间')
     }
 
-    const filters: { startDate?: Date, endDate?: Date, type?: string } = {}
+    const filters: {
+      startDate?: Date
+      endDate?: Date
+      type?: string
+      counterparty?: string
+      tagIds?: string[]
+      minAmount?: number
+      maxAmount?: number
+    } = {}
 
     if (startDate) {
       const date = new Date(startDate)
@@ -79,6 +92,22 @@ export class TransactionsController {
         throw new BadRequestException('交易类型错误')
       }
       filters.type = type
+    }
+
+    if (counterparty) {
+      filters.counterparty = counterparty
+    }
+
+    if (tagIds && tagIds.length > 0) {
+      filters.tagIds = tagIds
+    }
+
+    if (minAmount !== undefined) {
+      filters.minAmount = Number(minAmount)
+    }
+
+    if (maxAmount !== undefined) {
+      filters.maxAmount = Number(maxAmount)
     }
 
     return this.service.findAll(
@@ -136,5 +165,21 @@ export class TransactionsController {
     @Request() req: RequestWithUser,
   ) {
     return this.service.remove(id, req.user.userId)
+  }
+
+  @Post(':id/tags')
+  @ApiOperation({ summary: '为交易记录绑定标签' })
+  @ApiResponse({ status: 200, description: '标签绑定成功' })
+  async updateTags(
+    @Param('id') id: string,
+    @Body() body: { tagIds: string[], applyToAllSameCounterparty: boolean },
+    @Request() req: RequestWithUser,
+  ) {
+    return this.service.updateTags(
+      id,
+      body.tagIds,
+      body.applyToAllSameCounterparty,
+      req.user.userId,
+    )
   }
 }

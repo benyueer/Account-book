@@ -1,3 +1,5 @@
+import type { Tag } from './tag'
+
 export enum TransactionType {
   INCOME = 'income',
   EXPENSE = 'expense',
@@ -20,6 +22,7 @@ export interface Transaction {
   notes?: string
   sourceCard?: string
   userId: string
+  tags?: Tag[]
 
   // Frontend specific (might need to be separated later or kept optional)
   icon?: string
