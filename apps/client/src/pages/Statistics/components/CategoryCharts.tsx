@@ -8,14 +8,14 @@ interface Props {
 }
 
 const COLORS = [
-  '#6366f1', // Indigo
-  '#10b981', // Emerald
-  '#f59e0b', // Amber
-  '#3b82f6', // Blue
-  '#ec4899', // Pink
-  '#8b5cf6', // Violet
-  '#f43f5e', // Rose
-  '#06b6d4', // Cyan
+  '#5B8FF9', // Soft Blue
+  '#5AD8A6', // Soft Green
+  '#5D7092', // Slate
+  '#F6BD16', // Soft Yellow
+  '#E8684A', // Soft Red
+  '#6DC8EC', // Soft Cyan
+  '#9270CA', // Soft Purple
+  '#FF9D4D', // Soft Orange
 ]
 
 export const CategoryCharts = ({ data }: Props) => {

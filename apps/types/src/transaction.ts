@@ -1,5 +1,12 @@
 import type { Tag } from './tag'
 
+export enum TransactionSource {
+  WECHAT = '微信导入',
+  ALIPAY = '支付宝导入',
+  IMPORT = '导入',
+  MANUAL = '手动添加',
+}
+
 export enum TransactionType {
   INCOME = 'income',
   EXPENSE = 'expense',
@@ -29,6 +36,7 @@ export interface Transaction {
   currency?: string
 
   importRecordId?: string
+  source?: TransactionSource
 }
 
 export interface GroupedTransactions {
@@ -41,4 +49,4 @@ export interface GroupedTransactions {
 export type CreateTransactionDto = Omit<Transaction, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'deleteAt' | 'icon' | 'currency'>
 
 export type UpdateTransactionDto = Partial<CreateTransactionDto>
-export type ParsedTransaction = Omit<Transaction, 'id' | 'userId'>
+export type ParsedTransaction = Omit<Transaction, 'id' | 'userId'> & { source: TransactionSource }

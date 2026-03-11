@@ -161,6 +161,7 @@ const Detail: React.FC = () => {
               <List.Item extra={transaction.transactionCategory}>分类</List.Item>
             )}
             {transaction.paymentMethod && <List.Item extra={transaction.paymentMethod}>支付方式</List.Item>}
+            {transaction.source && <List.Item extra={transaction.source}>账单来源</List.Item>}
             {transaction.transactionStatus && <List.Item extra={transaction.transactionStatus}>交易状态</List.Item>}
           </List>
         </Card>

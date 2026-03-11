@@ -1,4 +1,4 @@
-import { TransactionType } from '@account-book/types'
+import { TransactionSource, TransactionType } from '@account-book/types'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, Length, Min } from 'class-validator'
 
@@ -70,4 +70,9 @@ export class CreateTransactionDto {
   @Length(1, 100)
   @IsOptional()
   sourceCard?: string
+
+  @ApiProperty({ enum: TransactionSource, example: TransactionSource.MANUAL, required: false })
+  @IsEnum(TransactionSource)
+  @IsOptional()
+  source?: TransactionSource
 }

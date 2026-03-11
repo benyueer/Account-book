@@ -1,5 +1,5 @@
 import type { ImportRecordMetadata, ParsedBill, ParsedTransaction } from '@account-book/types'
-import { TransactionType } from '@account-book/types'
+import { TransactionSource, TransactionType } from '@account-book/types'
 import * as XLSX from 'xlsx'
 
 type ExcelCellValue = string | number | Date | boolean | null | undefined
@@ -50,7 +50,7 @@ export class BillParser {
 
       result.transactions = dataRows
         .filter(row => row.length >= headerRow.length && row[0]) // 过滤空行
-        .map(row => this.rowToTransaction(row, headerRow))
+        .map(row => this.rowToTransaction(row, headerRow, result.metadata.source))
     }
 
     return result
@@ -61,6 +61,7 @@ export class BillParser {
       const line = row.join(' ')
       if (line.includes('微信支付账单明细')) {
         metadata.title = '微信支付账单'
+        metadata.source = TransactionSource.WECHAT
       }
       if (line.includes('微信昵称：')) {
         const match = line.match(/微信昵称：\[(.*?)\]/)
@@ -99,7 +100,7 @@ export class BillParser {
     }
   }
 
-  private static rowToTransaction(row: ExcelRow, headers: string[]): ParsedTransaction {
+  private static rowToTransaction(row: ExcelRow, headers: string[], source?: TransactionSource): ParsedTransaction {
     const data: Record<string, ExcelCellValue> = {}
     headers.forEach((header, index) => {
       data[header] = row[index]
@@ -119,6 +120,7 @@ export class BillParser {
       transactionOrderNumber: String(data['交易单号'] || ''),
       merchantOrderNumber: String(data['商户单号'] || ''),
       notes: data['备注'] ? String(data['备注']) : undefined,
+      source: source || TransactionSource.IMPORT,
     }
   }
 }

@@ -1,4 +1,4 @@
-import type { ParsedTransaction } from './transaction.js'
+import type { ParsedTransaction, TransactionSource } from './transaction.js'
 
 export enum ImportRecordStatus {
   PENDING = 'pending',
@@ -17,6 +17,7 @@ export interface ImportRecordMetadata {
   totalExpenseCount?: number
   totalExpenseCost?: number
   billNotes?: string
+  source?: TransactionSource
 }
 
 export interface ParsedBill {

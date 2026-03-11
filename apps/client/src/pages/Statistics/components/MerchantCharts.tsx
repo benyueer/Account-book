@@ -9,14 +9,14 @@ interface Props {
 
 // 更加高级的调色板 (HSL 基础)
 const COLORS = [
-  '#6366f1', // Indigo
-  '#8b5cf6', // Violet
-  '#ec4899', // Pink
-  '#f43f5e', // Rose
-  '#f59e0b', // Amber
-  '#10b981', // Emerald
-  '#06b6d4', // Cyan
-  '#3b82f6', // Blue
+  '#5B8FF9', // Soft Blue
+  '#5AD8A6', // Soft Green
+  '#5D7092', // Slate
+  '#F6BD16', // Soft Yellow
+  '#E8684A', // Soft Red
+  '#6DC8EC', // Soft Cyan
+  '#9270CA', // Soft Purple
+  '#FF9D4D', // Soft Orange
 ]
 
 export const MerchantCharts = ({ data }: Props) => {

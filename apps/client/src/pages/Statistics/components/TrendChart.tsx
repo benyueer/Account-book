@@ -34,12 +34,12 @@ export const TrendChart = ({ data }: Props) => {
   const CommonComponents = [
     <defs key="defs">
       <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.1}/>
-        <stop offset="95%" stopColor="#f43f5e" stopOpacity={0}/>
+        <stop offset="5%" stopColor="#E8684A" stopOpacity={0.1}/>
+        <stop offset="95%" stopColor="#E8684A" stopOpacity={0}/>
       </linearGradient>
       <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="5%" stopColor="#10b981" stopOpacity={0.1}/>
-        <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+        <stop offset="5%" stopColor="#5AD8A6" stopOpacity={0.1}/>
+        <stop offset="95%" stopColor="#5AD8A6" stopOpacity={0}/>
       </linearGradient>
     </defs>,
     <CartesianGrid key="grid" strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />,
@@ -97,14 +97,14 @@ export const TrendChart = ({ data }: Props) => {
             {chartType === 'area' ? (
               <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 {CommonComponents}
-                <Area type="monotone" dataKey="expense" name="expense" stroke="#f43f5e" strokeWidth={2} fillOpacity={1} fill="url(#colorExpense)" />
-                <Area type="monotone" dataKey="income" name="income" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorIncome)" />
+                <Area type="monotone" dataKey="expense" name="expense" stroke="#E8684A" strokeWidth={2} fillOpacity={1} fill="url(#colorExpense)" />
+                <Area type="monotone" dataKey="income" name="income" stroke="#5AD8A6" strokeWidth={2} fillOpacity={1} fill="url(#colorIncome)" />
               </AreaChart>
             ) : (
               <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} barGap={0}>
                 {CommonComponents}
-                <Bar dataKey="expense" name="expense" fill="#f43f5e" radius={[4, 4, 0, 0]} maxBarSize={20} />
-                <Bar dataKey="income" name="income" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={20} />
+                <Bar dataKey="expense" name="expense" fill="#E8684A" radius={[4, 4, 0, 0]} maxBarSize={20} />
+                <Bar dataKey="income" name="income" fill="#5AD8A6" radius={[4, 4, 0, 0]} maxBarSize={20} />
               </BarChart>
             )}
           </ResponsiveContainer>

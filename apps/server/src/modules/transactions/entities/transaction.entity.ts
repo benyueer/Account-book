@@ -1,4 +1,4 @@
-import { Transaction as TransactionInterface, TransactionType } from '@account-book/types'
+import { Transaction as TransactionInterface, TransactionSource, TransactionType } from '@account-book/types'
 import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, IsUUID, Length, Min } from 'class-validator'
 import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 import { Tag } from '../../tags/entities/tag.entity'
@@ -93,6 +93,11 @@ export class Transaction implements TransactionInterface {
   @IsUUID()
   @IsOptional()
   importRecordId: string
+
+  @Column({ name: 'source', nullable: true, type: 'enum', enum: TransactionSource, comment: '来源' })
+  @IsEnum(TransactionSource as object)
+  @IsOptional()
+  source: TransactionSource
 
   @ManyToMany(() => Tag)
   @JoinTable({
