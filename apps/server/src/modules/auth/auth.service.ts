@@ -1,5 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
+import { LedgersService } from '../ledgers/ledgers.service'
 import { UsersService } from '../users/users.service'
 import { LoginDto, RegisterDto } from './dto/auth.dto'
 
@@ -8,6 +9,7 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private ledgersService: LedgersService,
   ) { }
 
   async register(registerDto: RegisterDto) {
@@ -20,6 +22,9 @@ export class AuthService {
       registerDto.password,
       registerDto.name,
     )
+
+    // 创建默认账本
+    await this.ledgersService.createDefaultLedgers(user.id)
 
     return this.generateTokens(user.id, user.name)
   }

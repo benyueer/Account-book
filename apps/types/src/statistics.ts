@@ -18,7 +18,7 @@ export interface TrendData {
   expense: number
 }
 
-export type TimeRange = 'year' | 'month' | 'day'
+export type TimeRange = 'year' | 'month' | 'day' | 'all'
 
 export interface TagDistribution {
   name: string

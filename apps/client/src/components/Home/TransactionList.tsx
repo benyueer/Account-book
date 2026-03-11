@@ -8,6 +8,9 @@ interface TransactionListProps {
   isLoading?: boolean;
   hasMore: boolean;
   loadMore: (options?: any) => Promise<any>;
+  selectionMode?: boolean;
+  selectedIds?: string[];
+  onSelect?: (id: string, selected: boolean) => void;
 }
 
 export function TransactionList({
@@ -15,6 +18,9 @@ export function TransactionList({
   isLoading,
   hasMore,
   loadMore,
+  selectionMode,
+  selectedIds,
+  onSelect,
 }: TransactionListProps) {
   if (isLoading) {
     return (
@@ -54,7 +60,13 @@ export function TransactionList({
           {/* List Items */}
           <div className="bg-white divide-y divide-gray-50">
             {group.transactions.map((transaction) => (
-              <TransactionItem key={transaction.id} transaction={transaction} />
+              <TransactionItem 
+                key={transaction.id} 
+                transaction={transaction} 
+                selectionMode={selectionMode}
+                selected={selectedIds?.includes(transaction.id)}
+                onSelect={onSelect}
+              />
             ))}
           </div>
         </div>

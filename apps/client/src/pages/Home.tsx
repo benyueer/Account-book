@@ -6,6 +6,10 @@ import { Outlet } from "react-router-dom";
 import { FilterBar } from "../components/Home/FilterBar";
 import { TransactionList } from "../components/Home/TransactionList";
 import { useTransactions } from "../hooks/api/useTransactions";
+import { AddToLedgerModal } from "../components/Ledger/AddToLedgerModal";
+import { useSystemStore } from "../stores/system.store";
+import { Button } from "antd-mobile";
+import { Check } from "lucide-react";
 
 export default function Home() {
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -15,6 +19,10 @@ export default function Home() {
   const [tagIds, setTagIds] = useState<string[]>([]);
   const [minAmount, setMinAmount] = useState<number | undefined>(undefined);
   const [maxAmount, setMaxAmount] = useState<number | undefined>(undefined);
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const { showTabBar, hideTabBar } = useSystemStore();
 
   const filters = useMemo(() => {
     const params: any = { 
@@ -97,6 +105,32 @@ export default function Home() {
     setMaxAmount(undefined);
   };
 
+  const toggleSelectionMode = () => {
+    const nextMode = !selectionMode;
+    setSelectionMode(nextMode);
+    setSelectedIds([]);
+    if (nextMode) hideTabBar();
+    else showTabBar();
+  };
+
+  const handleSelect = (id: string, selected: boolean) => {
+    if (selected) {
+      setSelectedIds(prev => [...prev, id]);
+    } else {
+      setSelectedIds(prev => prev.filter(i => i !== id));
+    }
+  };
+
+  const handleSelectAll = () => {
+    if (!processedData) return;
+    const allIds = processedData.flatMap(g => g.transactions.map(t => t.id));
+    if (selectedIds.length === allIds.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(allIds);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -126,6 +160,8 @@ export default function Home() {
         onReset={handleReset}
         totalIncome={totals.income}
         totalExpense={totals.expense}
+        selectionMode={selectionMode}
+        onSelectionModeToggle={toggleSelectionMode}
       />
 
       <PullToRefresh onRefresh={handleRefresh}>
@@ -179,12 +215,61 @@ export default function Home() {
                   isLoading={isLoading}
                   hasMore={!!hasNextPage}
                   loadMore={fetchNextPage}
+                  selectionMode={selectionMode}
+                  selectedIds={selectedIds}
+                  onSelect={handleSelect}
                 />
               </motion.div>
             )}
           </AnimatePresence>
         </div>
       </PullToRefresh>
+
+      {/* 底部操作条 */}
+      <AnimatePresence>
+        {selectionMode && (
+          <motion.div
+            initial={{ y: 100 }}
+            animate={{ y: 0 }}
+            exit={{ y: 100 }}
+            className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-100 p-4 pb-8 flex items-center justify-between shadow-[0_-4px_16px_rgba(0,0,0,0.05)]"
+          >
+            <div className="flex items-center gap-4">
+              <div 
+                onClick={handleSelectAll}
+                className="flex items-center gap-2 text-sm text-slate-600"
+              >
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedIds.length > 0 && selectedIds.length === processedData.flatMap(g => g.transactions).length ? 'bg-indigo-500 border-indigo-500 text-white' : 'border-slate-300'}`}>
+                  {selectedIds.length > 0 && selectedIds.length === processedData.flatMap(g => g.transactions).length && <Check size={12} />}
+                </div>
+                全选
+              </div>
+              <span className="text-xs text-slate-400">已选 {selectedIds.length} 条</span>
+            </div>
+            
+            <Button
+              color="primary"
+              shape="rounded"
+              size="small"
+              disabled={selectedIds.length === 0}
+              onClick={() => setModalVisible(true)}
+            >
+              加入账本
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AddToLedgerModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        transactionIds={selectedIds}
+        onSuccess={() => {
+          setSelectionMode(false);
+          showTabBar();
+          setSelectedIds([]);
+        }}
+      />
       <Outlet />
     </motion.div>
   );

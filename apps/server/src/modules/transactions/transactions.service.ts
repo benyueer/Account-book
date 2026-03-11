@@ -160,9 +160,12 @@ export class TransactionsService {
     const userTags = await this.tagsService.findAllByUser(userId)
     const tagsToApply = userTags.filter(tag => tagIds.includes(tag.id))
 
-    transaction.tags = tagsToApply
-
-    const savedTransaction = await this.transactionRepository.save(transaction)
+    // 使用 relation manager 同步标签，这比 save() 更可靠
+    await this.transactionRepository
+      .createQueryBuilder()
+      .relation(Transaction, 'tags')
+      .of(transaction)
+      .addAndRemove(tagsToApply, transaction.tags || [])
 
     // 如果应用到所有同商户记录，则查找该用户下所有 counterparty 相同的记录
     if (applyToAllSameCounterparty && transaction.counterparty) {
@@ -171,18 +174,17 @@ export class TransactionsService {
         relations: ['tags'],
       })
 
-      const updates = relatedTransactions
-        .filter(t => t.id !== transaction.id)
-        .map((t) => {
-          t.tags = tagsToApply
-          return t
-        })
-
-      if (updates.length > 0) {
-        await this.transactionRepository.save(updates)
+      for (const t of relatedTransactions) {
+        if (t.id !== transaction.id) {
+          await this.transactionRepository
+            .createQueryBuilder()
+            .relation(Transaction, 'tags')
+            .of(t)
+            .addAndRemove(tagsToApply, t.tags || [])
+        }
       }
     }
 
-    return savedTransaction
+    return this.findOneById(id, userId)
   }
 }

@@ -8,6 +8,7 @@ import { AppService } from './app.service'
 import { AuthModule } from './modules/auth/auth.module'
 import { CardsModule } from './modules/cards/cards.module'
 import { ImportRecordModule } from './modules/importrecord/import-record.module'
+import { LedgersModule } from './modules/ledgers/ledgers.module'
 import { StatisticsModule } from './modules/statistics/statistics.module'
 import { TagsModule } from './modules/tags/tags.module'
 import { TransactionsModule } from './modules/transactions/transactions.module'
@@ -36,6 +37,7 @@ import { UsersModule } from './modules/users/users.module'
     CardsModule,
     TagsModule,
     StatisticsModule,
+    LedgersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

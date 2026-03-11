@@ -1,4 +1,4 @@
-import type { StatisticsData } from '@account-book/types'
+import type { StatisticsData, TimeRange } from '@account-book/types'
 import { Card } from 'antd-mobile'
 import { motion } from 'framer-motion'
 import { ArrowDownRight, ArrowUpRight, Calculator, Wallet } from 'lucide-react'
@@ -6,7 +6,7 @@ import { ArrowDownRight, ArrowUpRight, Calculator, Wallet } from 'lucide-react'
 interface Props {
   data: StatisticsData['overview']
   loading?: boolean
-  timeType: 'year' | 'month' | 'day'
+  timeType: TimeRange
 }
 
 export const StatisticsSummary = ({ data, loading, timeType }: Props) => {
@@ -17,7 +17,7 @@ export const StatisticsSummary = ({ data, loading, timeType }: Props) => {
     }).format(amount)
   }
 
-  const typeLabel = timeType === 'year' ? '本年' : timeType === 'month' ? '本月' : '本日'
+  const typeLabel = timeType === 'year' ? '本年' : timeType === 'month' ? '本月' : timeType === 'all' ? '全部' : '本日'
 
   const items = [
     {
@@ -42,7 +42,7 @@ export const StatisticsSummary = ({ data, loading, timeType }: Props) => {
       bgColor: 'bg-blue-50',
     },
     {
-      title: timeType === 'year' ? '年日均支出' : '月日均支出',
+      title: timeType === 'all' ? '日均支出' : timeType === 'year' ? '年日均支出' : '月日均支出',
       value: data.dailyAverageExpense,
       icon: <Calculator className="text-amber-500" size={20} />,
       color: 'text-amber-500',

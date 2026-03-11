@@ -4,9 +4,17 @@ import { useNavigate } from 'react-router-dom'
 
 interface TransactionItemProps {
   transaction: Transaction
+  selectionMode?: boolean
+  selected?: boolean
+  onSelect?: (id: string, selected: boolean) => void
 }
 
-export function TransactionItem({ transaction }: TransactionItemProps) {
+export function TransactionItem({ 
+  transaction, 
+  selectionMode, 
+  selected, 
+  onSelect 
+}: TransactionItemProps) {
   const navigate = useNavigate()
   const { id, amount, counterparty, icon, transactionTime, transactionType }
     = transaction
@@ -31,12 +39,25 @@ export function TransactionItem({ transaction }: TransactionItemProps) {
     hour12: false,
   })
 
+  const handleClick = async () => {
+    if (selectionMode) {
+      onSelect?.(id, !selected)
+    } else {
+      navigate(`/detail/${id}`)
+    }
+  }
+
   return (
     <div
-      className="flex cursor-pointer items-center justify-between px-4 py-3 transition-colors active:bg-gray-50"
-      onClick={async () => navigate(`/detail/${id}`)}
+      className={`flex cursor-pointer items-center justify-between px-4 py-3 transition-colors active:bg-gray-50 ${selected ? 'bg-indigo-50/50' : ''}`}
+      onClick={handleClick}
     >
       <div className="flex items-center gap-3">
+        {selectionMode && (
+          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${selected ? 'bg-indigo-500 border-indigo-500' : 'border-slate-300'}`}>
+            {selected && <div className="i-mdi-check text-white text-xs" />}
+          </div>
+        )}
         <div className="h-10 w-10 flex items-center justify-center rounded-full bg-gray-100 text-xl text-gray-600">
           {
             icon ? (

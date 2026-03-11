@@ -18,6 +18,8 @@ interface FilterBarProps {
   onReset: () => void
   totalIncome: number
   totalExpense: number
+  selectionMode?: boolean
+  onSelectionModeToggle?: () => void
 }
 
 export function FilterBar({
@@ -36,6 +38,8 @@ export function FilterBar({
   onReset,
   totalIncome,
   totalExpense,
+  selectionMode,
+  onSelectionModeToggle,
 }: FilterBarProps) {
   const [pickerVisible, setPickerVisible] = useState(false)
   const [typeVisible, setTypeVisible] = useState(false)
@@ -135,6 +139,14 @@ export function FilterBar({
               {((tagIds && tagIds.length > 0) || counterparty || minAmount !== undefined || maxAmount !== undefined) && (
                 <div className="h-1.5 w-1.5 rounded-full bg-primary" />
               )}
+            </button>
+
+            <button
+              className={`group flex items-center justify-center rounded-lg p-1.5 transition-colors ${selectionMode ? 'bg-indigo-500 text-white shadow-sm' : 'bg-slate-100/50 text-slate-400 hover:bg-slate-100'}`}
+              onClick={onSelectionModeToggle}
+              title={selectionMode ? '取消选择' : '批量操作'}
+            >
+              <div className={`text-lg ${selectionMode ? 'i-mdi-check-all' : 'i-mdi-checkbox-multiple-marked-outline'}`} />
             </button>
           </div>
         </div>

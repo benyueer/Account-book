@@ -4,6 +4,7 @@ import { useSystemStore } from '../../stores/system.store'
 
 const tabs = [
   { path: '/', label: '账单', icon: 'i-mdi-wallet-outline' },
+  { path: '/ledgers', label: '账本', icon: 'i-mdi-book-open-variant' },
   { path: '/statistics', label: '统计', icon: 'i-mdi-chart-bar' },
   { path: '/profile', label: '我的', icon: 'i-mdi-account-outline' },
 ]

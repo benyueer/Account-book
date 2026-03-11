@@ -17,9 +17,10 @@ export class StatisticsController {
     @Request() req: RequestWithUser,
     @Query('month') month?: string,
     @Query('date') date?: string,
-    @Query('type') type: 'year' | 'month' | 'day' = 'month',
+    @Query('type') type: 'year' | 'month' | 'day' | 'all' = 'month',
+    @Query('ledgerId') ledgerId?: string,
   ) {
     const targetDate = date || month || new Date().toISOString()
-    return this.statisticsService.getStatistics(req.user.userId, targetDate, type as any)
+    return this.statisticsService.getStatistics(req.user.userId, targetDate, type as any, ledgerId)
   }
 }
