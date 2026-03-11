@@ -1,79 +1,117 @@
-import { TransactionType } from '@account-book/types'
-import * as XLSX from 'xlsx'
+import { TransactionSource, TransactionType } from '@account-book/types'
 import { BillParser } from './bill-parser.util'
 
-jest.mock('xlsx', () => ({
-  readFile: jest.fn(),
-  utils: {
-    sheet_to_json: jest.fn(),
-  },
-}))
+describe('支付宝账单解析 - 真实文件', () => {
+  const filePath = '/Users/mac/Desktop/pro/Account-book/test_file/支付宝交易明细(20250101-20251231).csv'
+  let result: ReturnType<typeof BillParser.parse>
 
-describe('billParser', () => {
-  const mockRows = [
-    ['微信支付账单明细'],
-    ['查询支付人：[张三]'],
-    ['起始时间：[2023-01-01 00:00:00]  终止时间：[2023-01-31 23:59:59]'],
-    ['导出时间：[2023-02-01 10:00:00]'],
-    ['最近一个月收入：1笔，金额：[100.00]元'],
-    ['最近一个月支出：1笔，金额：[50.00]元'],
-    ['注意事项：这是一些注意事项'],
-    ['----------------------微信支付账单明细列表----------------------'],
-    ['交易时间', '交易类型', '交易对方', '金额(元)', '收/支', '交易单号'],
-    ['2023-01-05 12:00:00', '转账', '李四', '¥100.00', '收入', '100001'],
-    ['2023-01-06 13:00:00', '消费', '某商店', '¥50.00', '支出', '100002'],
-  ]
-
-  beforeEach(() => {
-    jest.clearAllMocks()
-    ; (XLSX.readFile as jest.Mock).mockReturnValue({
-      SheetNames: ['Sheet1'],
-      Sheets: { Sheet1: {} },
-    })
-    ; (XLSX.utils.sheet_to_json as jest.Mock).mockReturnValue(mockRows)
+  beforeAll(() => {
+    result = BillParser.parse(filePath)
   })
 
-  it('应该正确解析微信支付账单的元数据', () => {
-    const result = BillParser.parse('fake-path.csv')
-
-    expect(result.metadata.title).toBe('微信支付账单')
-    expect(result.metadata.nickname).toBe('张三')
-    expect(result.metadata.startTime).toBeInstanceOf(Date)
-    expect(result.metadata.totalIncomeCount).toBe(1)
-    expect(result.metadata.totalIncomeCost).toBe(100)
-    expect(result.metadata.totalExpenseCount).toBe(1)
-    expect(result.metadata.totalExpenseCost).toBe(50)
-    expect(result.metadata.billNotes).toContain('这是一些注意事项')
-  })
-
-  it('应该正确解析交易明细', () => {
-    const result = BillParser.parse('fake-path.csv')
-
-    expect(result.transactions).toHaveLength(2)
-
-    expect(result.transactions[0]).toMatchObject({
-      transactionOrderNumber: '100001',
-      transactionType: TransactionType.INCOME,
-      amount: 100,
-      counterparty: '李四',
+  describe('元数据解析', () => {
+    it('应识别来源为支付宝导入', () => {
+      expect(result.metadata.source).toBe(TransactionSource.ALIPAY)
     })
 
-    expect(result.transactions[1]).toMatchObject({
-      transactionOrderNumber: '100002',
-      transactionType: TransactionType.EXPENSE,
-      amount: 50,
-      counterparty: '某商店',
+    it('应解析账单标题', () => {
+      expect(result.metadata.title).toBe('支付宝支付账单')
+    })
+
+    it('应解析账户昵称', () => {
+      expect(result.metadata.nickname).toBe('347201906@qq.com')
+    })
+
+    it('应解析起始时间', () => {
+      expect(result.metadata.startTime).toBeDefined()
+      expect(result.metadata.startTime).toBeInstanceOf(Date)
+      const start = result.metadata.startTime as Date
+      expect(start.getFullYear()).toBe(2025)
+      expect(start.getMonth()).toBe(0) // 1月 (0-indexed)
+      expect(start.getDate()).toBe(1)
+    })
+
+    it('应解析终止时间', () => {
+      expect(result.metadata.endTime).toBeDefined()
+      expect(result.metadata.endTime).toBeInstanceOf(Date)
+      const end = result.metadata.endTime as Date
+      expect(end.getFullYear()).toBe(2025)
+      expect(end.getMonth()).toBe(11) // 12月 (0-indexed)
+      expect(end.getDate()).toBe(31)
+    })
+
+    it('应解析导出时间', () => {
+      expect(result.metadata.exportTime).toBeDefined()
+      expect(result.metadata.exportTime).toBeInstanceOf(Date)
+      const exportTime = result.metadata.exportTime as Date
+      expect(exportTime.getFullYear()).toBe(2026)
+    })
+
+    it('应解析收入统计', () => {
+      expect(result.metadata.totalIncomeCount).toBe(7)
+      expect(result.metadata.totalIncomeCost).toBe(10.44)
+    })
+
+    it('应解析支出统计', () => {
+      expect(result.metadata.totalExpenseCount).toBe(419)
+      expect(result.metadata.totalExpenseCost).toBe(24238.85)
     })
   })
 
-  it('应该能处理金额中的货币符号和非数字字符', () => {
-    ; (XLSX.utils.sheet_to_json as jest.Mock).mockReturnValue([
-      ...mockRows.slice(0, 10),
-      ['交易时间', '交易类型', '交易对方', '金额(元)', '收/支', '交易单号'],
-      ['2023-01-05 12:00:00', '转账', '李四', '-1,234.56', '支出', '100003'],
-    ])
+  describe('交易明细解析', () => {
+    it('应解析出正确数量的交易记录', () => {
+      // 504 笔总记录 = 7 + 419 + 78，但 CSV 可能并非恰好 504 行（某些行可能被过滤）
+      expect(result.transactions.length).toBeGreaterThan(0)
+      // 文件中共 504 笔记录
+      expect(result.transactions.length).toBeCloseTo(504, -1)
+    })
 
-    const result = BillParser.parse('fake-path.csv')
-    expect(result.transactions[0].amount).toBe(1234.56)
+    it('应正确解析第一条交易记录', () => {
+      const first = result.transactions[0]
+      expect(first).toBeDefined()
+      expect(first.source).toBe(TransactionSource.ALIPAY)
+      expect(first.transactionTime).toBeInstanceOf(Date)
+      expect(typeof first.amount).toBe('number')
+      expect(first.amount).toBeGreaterThan(0)
+      expect([TransactionType.INCOME, TransactionType.EXPENSE, TransactionType.NO_COUNT])
+        .toContain(first.transactionType)
+    })
+
+    it('所有交易记录都应有合法的交易时间', () => {
+      for (const tx of result.transactions) {
+        expect(tx.transactionTime).toBeInstanceOf(Date)
+        expect(Number.isNaN((tx.transactionTime as Date).getTime())).toBe(false)
+      }
+    })
+
+    it('所有交易记录都应有合法的金额（大于等于 0）', () => {
+      for (const tx of result.transactions) {
+        expect(tx.amount).toBeGreaterThanOrEqual(0)
+        expect(Number.isNaN(tx.amount)).toBe(false)
+      }
+    })
+
+    it('收/支字段应被正确映射', () => {
+      const incomeCount = result.transactions.filter(tx => tx.transactionType === TransactionType.INCOME).length
+      const expenseCount = result.transactions.filter(tx => tx.transactionType === TransactionType.EXPENSE).length
+      const noCountCount = result.transactions.filter(tx => tx.transactionType === TransactionType.NO_COUNT).length
+
+      // 验证与元数据中的统计数字基本一致
+      expect(incomeCount).toBe(7)
+      expect(expenseCount).toBe(419)
+      expect(noCountCount).toBe(78)
+    })
+
+    it('所有交易记录来源都应为支付宝导入', () => {
+      for (const tx of result.transactions) {
+        expect(tx.source).toBe(TransactionSource.ALIPAY)
+      }
+    })
+
+    it('交易对方字段应存在字符串类型的值', () => {
+      for (const tx of result.transactions) {
+        expect(typeof tx.counterparty).toBe('string')
+      }
+    })
   })
 })

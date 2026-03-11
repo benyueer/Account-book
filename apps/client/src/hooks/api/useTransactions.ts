@@ -88,8 +88,14 @@ export function useUpdateTransactionTags() {
     mutationFn: async ({ id, tagIds, applyToAllSameCounterparty }: { id: string, tagIds: string[], applyToAllSameCounterparty: boolean }) =>
       apiClient.post<Transaction>(`/v1/transactions/${id}/tags`, { tagIds, applyToAllSameCounterparty }),
     onSuccess: async (_, variables) => {
-      await queryClient.invalidateQueries({ queryKey: ['transactions'] })
+      // 只刷新单条交易缓存，避免触发整个分页列表重新请求
+      // 若勾选了「应用到同名商户」，列表缓存也需要同步，但用精确匹配避免重复请求
       await queryClient.invalidateQueries({ queryKey: ['transaction', variables.id] })
+      if (variables.applyToAllSameCounterparty) {
+        // 批量更新时才刷新列表，且用 refetchType: 'none' 只标记为 stale，
+        // 等用户实际访问列表页时再按需请求，而非立即重新 fetch 所有分页
+        void queryClient.invalidateQueries({ queryKey: ['transactions'], refetchType: 'none' })
+      }
     },
   })
 }
