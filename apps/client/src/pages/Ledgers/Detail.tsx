@@ -20,7 +20,7 @@ export default function LedgerDetail() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [currentDate, setCurrentDate] = useState(dayjs().toISOString())
-  const [timeType, setTimeType] = useState<TimeRange>('month')
+  const [timeType, setTimeType] = useState<TimeRange>('all')
   const [pickerVisible, setPickerVisible] = useState(false)
 
   const { data: ledger } = useQuery({
