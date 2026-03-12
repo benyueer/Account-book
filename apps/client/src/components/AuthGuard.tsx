@@ -3,7 +3,7 @@ import { useAuthStore } from '../stores/auth.store'
 
 export function AuthGuard() {
   const token = useAuthStore(state => state.token)
-  const isAuthenticated = Boolean(token && token.trim() !== '')
+  const isAuthenticated = Boolean(token)
   const location = useLocation()
 
   if (!isAuthenticated) {

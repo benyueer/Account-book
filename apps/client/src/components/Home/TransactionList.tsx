@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { GroupedTransactions } from "../../types/transaction";
 import { InfiniteScroll } from "antd-mobile";
 import dayjs from "dayjs";
@@ -13,7 +14,7 @@ interface TransactionListProps {
   onSelect?: (id: string, selected: boolean) => void;
 }
 
-export function TransactionList({
+export const TransactionList = memo(function TransactionList({
   groups,
   isLoading,
   hasMore,
@@ -22,6 +23,7 @@ export function TransactionList({
   selectedIds,
   onSelect,
 }: TransactionListProps) {
+
   if (isLoading) {
     return (
       <div className="p-4 space-y-4">
@@ -60,9 +62,9 @@ export function TransactionList({
           {/* List Items */}
           <div className="bg-white divide-y divide-gray-50">
             {group.transactions.map((transaction) => (
-              <TransactionItem 
-                key={transaction.id} 
-                transaction={transaction} 
+              <TransactionItem
+                key={transaction.id}
+                transaction={transaction}
                 selectionMode={selectionMode}
                 selected={selectedIds?.includes(transaction.id)}
                 onSelect={onSelect}
@@ -74,4 +76,4 @@ export function TransactionList({
       <InfiniteScroll loadMore={loadMore} hasMore={hasMore} />
     </div>
   );
-}
+});

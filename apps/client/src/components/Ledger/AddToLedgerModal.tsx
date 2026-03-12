@@ -1,5 +1,5 @@
 import { Button, CheckList, Modal, Toast } from 'antd-mobile'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { ledgerApi } from '../../api/ledger'
 
@@ -20,7 +20,7 @@ export function AddToLedgerModal({ visible, onClose, transactionIds, onSuccess }
     enabled: visible,
   })
 
-  const handleAdd = async () => {
+  const handleAdd = useCallback(async () => {
     if (!selectedLedgerId) {
       Toast.show({ content: '请选择一个账本', position: 'bottom' })
       return
@@ -42,7 +42,7 @@ export function AddToLedgerModal({ visible, onClose, transactionIds, onSuccess }
     finally {
       setSubmitting(false)
     }
-  }
+  }, [selectedLedgerId, transactionIds, onSuccess, onClose]);
 
   return (
     <Modal

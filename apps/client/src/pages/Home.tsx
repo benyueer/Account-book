@@ -1,45 +1,39 @@
-import type { Transaction } from "@account-book/types";
 import { DotLoading, Empty, PullToRefresh } from "antd-mobile";
 import { AnimatePresence, motion } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 import { Outlet } from "react-router-dom";
 import { FilterBar } from "../components/Home/FilterBar";
 import { TransactionList } from "../components/Home/TransactionList";
 import { useTransactions } from "../hooks/api/useTransactions";
+import { useTransactionFilter } from "../hooks/useTransactionFilter";
 import { AddToLedgerModal } from "../components/Ledger/AddToLedgerModal";
 import { useSystemStore } from "../stores/system.store";
 import { Button } from "antd-mobile";
 import { Check } from "lucide-react";
+import { groupTransactions, getAllTransactionIds } from "../utils/transaction";
 
 export default function Home() {
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
-  const [filterType, setFilterType] = useState<string | undefined>(undefined);
-  const [counterparty, setCounterparty] = useState<string | undefined>(undefined);
-  const [tagIds, setTagIds] = useState<string[]>([]);
-  const [minAmount, setMinAmount] = useState<number | undefined>(undefined);
-  const [maxAmount, setMaxAmount] = useState<number | undefined>(undefined);
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const { showTabBar, hideTabBar } = useSystemStore();
 
-  const filters = useMemo(() => {
-    const params: any = { 
-      type: filterType,
-      counterparty,
-      tagIds: tagIds.length > 0 ? tagIds.join(',') : undefined,
-      minAmount,
-      maxAmount,
-    };
-    if (startDate) {
-      params.startDate = startDate.toISOString();
-    }
-    if (endDate) {
-      params.endDate = endDate.toISOString();
-    }
-    return params;
-  }, [startDate, endDate, filterType, counterparty, tagIds, minAmount, maxAmount]);
+  const {
+    startDate,
+    endDate,
+    filterType,
+    counterparty,
+    tagIds,
+    minAmount,
+    maxAmount,
+    handleDateRangeChange,
+    handleTypeChange,
+    handleCounterpartyChange,
+    handleTagsChange,
+    handleAmountRangeChange,
+    reset,
+    filters,
+  } = useTransactionFilter();
 
   const { data, fetchNextPage, hasNextPage, isLoading, refetch } =
     useTransactions(filters);
@@ -47,39 +41,16 @@ export default function Home() {
   const processedData = useMemo(() => {
     if (!data) return [];
 
-    // 平铺所有页的数据
+    // Flatten all pages of data
     const allTransactions = data.pages.flatMap((page) => page.items);
 
-    // 分组逻辑
-    const groupMap = allTransactions.reduce((pre, item) => {
-      const date = new Date(item.transactionTime);
-      const dayKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-      if (!pre.has(dayKey)) pre.set(dayKey, []);
-      pre.get(dayKey)?.push(item);
-      return pre;
-    }, new Map<string, Transaction[]>());
-
-    return [...groupMap.entries()]
-      .map(([date, transactions]) => ({
-        date,
-        totalIncome: transactions.reduce(
-          (acc, t) =>
-            acc + (t.transactionType === "income" ? Number(t.amount) : 0),
-          0,
-        ),
-        totalExpense: transactions.reduce(
-          (acc, t) =>
-            acc + (t.transactionType === "expense" ? Number(t.amount) : 0),
-          0,
-        ),
-        transactions,
-      }))
-      .sort((a, b) => b.date.localeCompare(a.date));
+    // Group by date
+    return groupTransactions(allTransactions);
   }, [data]);
 
   const totals = useMemo(() => {
     if (!data?.pages[0]) return { income: 0, expense: 0 };
-    // 后端返回的最后一次统计数据（通常后端第一页返回总计）
+    // Backend returns summary data on the first page (usually)
     const firstPage = data.pages[0];
     return {
       income: firstPage.totalIncome || 0,
@@ -87,49 +58,42 @@ export default function Home() {
     };
   }, [data]);
 
-  const handleRefresh = async () => {
+  const handleRefresh = useCallback(async () => {
     await refetch();
-  };
+  }, [refetch]);
 
-  const handleTypeChange = (type?: string) => {
-    setFilterType(type);
-  };
-
-  const handleReset = () => {
-    setStartDate(null);
-    setEndDate(null);
-    setFilterType(undefined);
-    setCounterparty(undefined);
-    setTagIds([]);
-    setMinAmount(undefined);
-    setMaxAmount(undefined);
-  };
-
-  const toggleSelectionMode = () => {
+  const toggleSelectionMode = useCallback(() => {
     const nextMode = !selectionMode;
     setSelectionMode(nextMode);
     setSelectedIds([]);
     if (nextMode) hideTabBar();
     else showTabBar();
-  };
+  }, [selectionMode, hideTabBar, showTabBar]);
 
-  const handleSelect = (id: string, selected: boolean) => {
+  const handleSelect = useCallback((id: string, selected: boolean) => {
     if (selected) {
-      setSelectedIds(prev => [...prev, id]);
+      setSelectedIds((prev) => [...prev, id]);
     } else {
-      setSelectedIds(prev => prev.filter(i => i !== id));
+      setSelectedIds((prev) => prev.filter((i) => i !== id));
     }
-  };
+  }, []);
 
-  const handleSelectAll = () => {
+  const handleSelectAll = useCallback(() => {
     if (!processedData) return;
-    const allIds = processedData.flatMap(g => g.transactions.map(t => t.id));
+    const allIds = getAllTransactionIds(processedData);
     if (selectedIds.length === allIds.length) {
       setSelectedIds([]);
     } else {
       setSelectedIds(allIds);
     }
-  };
+  }, [processedData, selectedIds]);
+
+  const allTransactionCount = useMemo(() => {
+    return processedData ? getAllTransactionIds(processedData).length : 0;
+  }, [processedData]);
+
+  const isAllSelected =
+    selectedIds.length > 0 && selectedIds.length === allTransactionCount;
 
   return (
     <motion.div
@@ -146,18 +110,12 @@ export default function Home() {
         tagIds={tagIds}
         minAmount={minAmount}
         maxAmount={maxAmount}
-        onDateRangeChange={(start?: Date, end?: Date) => {
-          setStartDate(start || null);
-          setEndDate(end || null);
-        }}
+        onDateRangeChange={handleDateRangeChange}
         onTypeChange={handleTypeChange}
-        onCounterpartyChange={setCounterparty}
-        onTagsChange={setTagIds}
-        onAmountRangeChange={(min?: number, max?: number) => {
-          setMinAmount(min);
-          setMaxAmount(max);
-        }}
-        onReset={handleReset}
+        onCounterpartyChange={handleCounterpartyChange}
+        onTagsChange={handleTagsChange}
+        onAmountRangeChange={handleAmountRangeChange}
+        onReset={reset}
         totalIncome={totals.income}
         totalExpense={totals.expense}
         selectionMode={selectionMode}
@@ -225,7 +183,7 @@ export default function Home() {
         </div>
       </PullToRefresh>
 
-      {/* 底部操作条 */}
+      {/* Bottom action bar */}
       <AnimatePresence>
         {selectionMode && (
           <motion.div
@@ -235,18 +193,26 @@ export default function Home() {
             className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-100 p-4 pb-8 flex items-center justify-between shadow-[0_-4px_16px_rgba(0,0,0,0.05)]"
           >
             <div className="flex items-center gap-4">
-              <div 
+              <div
                 onClick={handleSelectAll}
                 className="flex items-center gap-2 text-sm text-slate-600"
               >
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedIds.length > 0 && selectedIds.length === processedData.flatMap(g => g.transactions).length ? 'bg-indigo-500 border-indigo-500 text-white' : 'border-slate-300'}`}>
-                  {selectedIds.length > 0 && selectedIds.length === processedData.flatMap(g => g.transactions).length && <Check size={12} />}
+                <div
+                  className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                    isAllSelected
+                      ? "bg-indigo-500 border-indigo-500 text-white"
+                      : "border-slate-300"
+                  }`}
+                >
+                  {isAllSelected && <Check size={12} />}
                 </div>
                 全选
               </div>
-              <span className="text-xs text-slate-400">已选 {selectedIds.length} 条</span>
+              <span className="text-xs text-slate-400">
+                已选 {selectedIds.length} 条
+              </span>
             </div>
-            
+
             <Button
               color="primary"
               shape="rounded"
