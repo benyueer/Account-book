@@ -1,16 +1,12 @@
 import { Button, Card, Checkbox, DotLoading, ErrorBlock, List, NavBar, Popup, Tag, TextArea, Toast } from 'antd-mobile'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useCreateTag, useTags } from '../hooks/api/useTags'
-import { useTransaction, useUpdateTransaction, useUpdateTransactionTags } from '../hooks/api/useTransactions'
-import { useSystemStore } from '../stores/system.store'
+import { useCreateTag, useTags } from '../../hooks/api/useTags'
+import { useTransaction, useUpdateTransaction, useUpdateTransactionTags } from '../../hooks/api/useTransactions'
+import { useSystemStore } from '../../stores/system.store'
 
-const Detail: React.FC = () => {
-  const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
+const Detail: React.FC<{ id: string | null, onClose: () => void }> = ({ id, onClose }) => {
   const { hideTabBar, showTabBar } = useSystemStore()
-
   const { data: transaction, isLoading, error } = useTransaction(id || '')
   const updateTransaction = useUpdateTransaction()
   const updateTransactionTags = useUpdateTransactionTags()
@@ -25,7 +21,7 @@ const Detail: React.FC = () => {
   const [tagsPopupVisible, setTagsPopupVisible] = useState(false)
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
   const [applyToAll, setApplyToAll] = useState(false)
-  
+
   // 新建标签状态
   const [newTagName, setNewTagName] = useState('')
 
@@ -185,15 +181,15 @@ const Detail: React.FC = () => {
         </Card>
 
         {/* 备注（支持点击编辑） */}
-        <Card 
-          title="备注" 
+        <Card
+          title="备注"
           extra={
             !isEditingNotes && (
               <span className="text-primary text-sm" onClick={() => setIsEditingNotes(true)}>
                 编辑
               </span>
             )
-          } 
+          }
           className="rounded-2xl border-none pb-2 shadow-sm"
         >
           <div className="px-3">
@@ -217,8 +213,8 @@ const Detail: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div 
-                className="text-sm text-slate-600 min-h-[1.5rem]" 
+              <div
+                className="text-sm text-slate-600 min-h-[1.5rem]"
                 onClick={() => setIsEditingNotes(true)}
               >
                 {transaction.notes || <span className="text-slate-300">暂无备注，点击添加</span>}
@@ -226,7 +222,7 @@ const Detail: React.FC = () => {
             )}
           </div>
         </Card>
-        
+
         <div className="h-20"></div>
 
         {/* 选择标签的弹窗 */}
@@ -241,7 +237,7 @@ const Detail: React.FC = () => {
               <span className="font-bold">设置标签</span>
               <span className="text-primary font-bold" onClick={handleSaveTags}>保存</span>
             </div>
-            
+
             <div className="flex-1 overflow-y-auto p-4 space-y-6">
               <div>
                 <div className="text-sm text-slate-500 mb-3">所有标签</div>
@@ -263,7 +259,7 @@ const Detail: React.FC = () => {
                   {allTags.length === 0 && <span className="text-sm text-slate-400">暂无标签</span>}
                 </div>
               </div>
-              
+
               <div className="bg-white p-3 rounded-xl shadow-sm border border-slate-100">
                 <div className="text-sm font-bold mb-2">新建标签</div>
                 <div className="flex gap-2">
@@ -279,11 +275,11 @@ const Detail: React.FC = () => {
                   </Button>
                 </div>
               </div>
-              
+
               {transaction.counterparty && (
                 <div className="bg-white p-3 rounded-xl shadow-sm border border-slate-100 mt-4">
-                  <Checkbox 
-                    checked={applyToAll} 
+                  <Checkbox
+                    checked={applyToAll}
                     onChange={setApplyToAll}
                     className="text-sm"
                   >
@@ -307,7 +303,7 @@ const Detail: React.FC = () => {
       transition={{ type: 'spring', damping: 25, stiffness: 200 }}
       className="fixed inset-0 z-50 flex flex-col bg-slate-50"
     >
-      <NavBar onBack={async () => navigate(-1)} className="flex-shrink-0 border-b border-slate-100 bg-white">
+      <NavBar onBack={onClose} className="flex-shrink-0 border-b border-slate-100 bg-white">
         交易详情
       </NavBar>
       <div className="flex-1 overflow-y-auto">{renderContent()}</div>

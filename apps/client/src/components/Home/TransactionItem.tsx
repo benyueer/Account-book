@@ -1,7 +1,8 @@
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import type { Transaction } from "../../types/transaction";
 import { TransactionType } from "@account-book/types";
 import { useNavigate } from "react-router-dom";
+import Detail from "./Detail";
 
 interface TransactionItemProps {
   transaction: Transaction;
@@ -17,6 +18,7 @@ export const TransactionItem = memo(function TransactionItem({
   onSelect,
 }: TransactionItemProps) {
   const navigate = useNavigate();
+  const [activeItemId, setActiveItemId] = useState<string | null>(null);
   const { id, amount, counterparty, icon, transactionTime, transactionType } =
     transaction;
 
@@ -40,14 +42,15 @@ export const TransactionItem = memo(function TransactionItem({
     if (selectionMode) {
       onSelect?.(id, !selected);
     } else {
-      navigate(`/detail/${id}`);
+      setActiveItemId(id);
     }
   }, [selectionMode, id, selected, onSelect, navigate]);
 
   const backgroundColor = selected ? "bg-indigo-50/50" : "";
 
   return (
-    <div
+    <>
+      <div
       className={`flex cursor-pointer items-center justify-between px-4 py-3 transition-colors active:bg-gray-50 ${backgroundColor}`}
       onClick={handleClick}
     >
@@ -82,6 +85,13 @@ export const TransactionItem = memo(function TransactionItem({
       <div className={`font-semibold ${amountColor}`}>
         {amountPrefix}¥{Math.abs(amount).toFixed(2)}
       </div>
-    </div>
+      </div>
+      { activeItemId && (
+        <Detail
+          id={activeItemId}
+          onClose={() => setActiveItemId(null)}
+        />
+      )}
+    </>
   );
 });

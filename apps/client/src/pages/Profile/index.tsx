@@ -34,15 +34,12 @@ export default function Profile() {
       </motion.div>
 
       <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
-        <MenuItem icon="📊" text="月度报告" />
         <MenuItem icon="💳" text="卡片管理" onClick={async () => navigate('/profile/cards')} />
         <MenuItem
           icon="📥"
           text="导入账单"
           onClick={async () => navigate('/profile/import-records')}
         />
-        <MenuItem icon="⚙️" text="设置" />
-        <MenuItem icon="❓" text="帮助与反馈" isLast />
       </div>
 
       <motion.div

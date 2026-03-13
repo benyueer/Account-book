@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import { AuthGuard } from '../components/AuthGuard'
 import { Layout } from '../components/Layout'
 import Cards from '../pages/Cards'
-import Detail from '../pages/Detail'
+import Detail from '../components/Home/Detail'
 import Home from '../pages/Home'
 import ImportRecords from '../pages/ImportRecords'
 import Ledgers from '../pages/Ledgers'
@@ -27,12 +27,6 @@ export const router = createBrowserRouter([
           {
             path: '',
             element: <Home />,
-            children: [
-              {
-                path: 'detail/:id',
-                element: <Detail />,
-              },
-            ],
           },
           {
             path: 'statistics',
